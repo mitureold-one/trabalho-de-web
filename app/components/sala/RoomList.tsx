@@ -1,6 +1,6 @@
 "use client"
 
-import styles from "../../styles/chat.module.css"
+import styles from "../../styles/sala.module.css"
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"

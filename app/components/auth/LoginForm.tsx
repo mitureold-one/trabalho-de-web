@@ -23,7 +23,7 @@ export default function LoginForm() {
       alert(error.message)
       return
     }
-    router.push("/chat")
+    router.push("/salas")
   }
 
   return (
