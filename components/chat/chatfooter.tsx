@@ -16,18 +16,17 @@ function formatDate(date: string){
 }
 
 export default function ChatFooter({ room }: ChatFooterProps){
-  if(!room){
-    return <footer>Carregando dados da sala...</footer>
-  }
+  if(!room) return null; 
+
   return (
-    <footer className={styles.chatfooter}>
-      <p> Plataforma Criada Por: Chat da Galera ®-2026 </p>
-      <p>Informações da Sala:</p>
-      <p>
-        {room.nome}<br/>
-        criado por: {room.id_user}<br/>
-        Em: {formatDate(room.created_at)}
-      </p>
+    <footer className={styles.chatFooterInfo}>
+      <div className={styles.footerContent}>
+        <div className={styles.roomDetails}>
+          <strong>{room.nome}</strong>
+          <span> • Criada em {formatDate(room.created_at)}</span>
+        </div>
+        <p className={styles.copyright}>Chat da Galera ® 2026</p>
+      </div>
     </footer>
   )
 }

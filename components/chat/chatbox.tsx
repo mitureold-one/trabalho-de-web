@@ -1,84 +1,109 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useParams } from "next/navigation" 
+import { useState, useEffect, useRef } from "react"
 import { supabase } from "@/lib/supabase"
 import ChatFooter from "./chatfooter"
 import styles from "@/styles/chat.module.css"
 
+// Definimos o que o componente espera receber
+interface ChatboxProps {
+  roomId: string
+}
 
-export default function Chatbox() {
-  const params = useParams()
-  const roomId = params.id as string
-
+export default function Chatbox({ roomId }: ChatboxProps) {
+  const scrollRef = useRef<HTMLDivElement>(null)
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState<any[]>([])
   const [roomData, setRoomData] = useState<any>(null)
 
-  // 1. Carregar dados da sala (Nome, etc)
+  // 1. Carregar dados iniciais
   useEffect(() => {
-    async function getRoomDetails() {
-      const { data } = await supabase
+    async function getInitialData() {
+      if (!roomId) return
+
+      const { data: room } = await supabase
         .from("rooms")
         .select("*")
         .eq("id_room", roomId)
         .single()
+      if (room) setRoomData(room)
+
+      const { data: msgs } = await supabase
+        .from("mensagem")
+        .select("*")
+        .eq("room_id", roomId)
+        .order("created_at", { ascending: true })
       
-      if (data) setRoomData(data)
+      if (msgs) setMessages(msgs || [])
     }
 
-    if (roomId) getRoomDetails()
+    getInitialData()
   }, [roomId])
 
-  // 2. Enviar mensagem para o Supabase
+  // 2. Realtime (Ouvir novas mensagens)
+  useEffect(() => {
+    if (!roomId) return
+
+    const channel = supabase
+      .channel(`room-${roomId}`)
+      .on(
+        'postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'mensagem', filter: `room_id=eq.${roomId}` },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new])
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [roomId])
+
+  // 3. Auto-scroll
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [messages])
+
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault()
     if (!message.trim()) return
 
     const { error } = await supabase
-      .from("mensagem") // Certifique-se que essa tabela existe
-      .insert({
-        content: message,
-        room_id: roomId, // Vincula a mensagem a esta sala específica
-      })
+      .from("mensagem")
+      .insert({ content: message, room_id: roomId })
 
-    if (error) {
-      console.error("Erro ao enviar:", error)
-    } else {
-      setMessage("")
-      // Aqui você poderia recarregar as mensagens, mas o ideal é o Realtime
-    }
+    if (!error) setMessage("")
   }
 
   return (
-    <div className={styles.container}>
-      <header>
-        <h1>Chat da Galera</h1>
+    <div className={styles.chatWrapper}>
+      <header className={styles.chatHeader}>
+        <h2>Sala: {roomData?.nome || "Carregando..."}</h2>
       </header>
 
-      {/* Exibe o nome dinâmico vindo do banco */}
-      <h2>Sala: {roomData?.nome || "Carregando..."}</h2>
-
-      <div >
+      <div className={styles.messagesArea} ref={scrollRef}>
         {messages.map((msg, index) => (
-          <p key={msg.id || index}>
-            <strong>{msg.user_email || "Anônimo"}:</strong> {msg.content}
-          </p>
+          <div key={msg.id || index} className={styles.messageRow}>
+            <div className={styles.bubble}>
+              <span className={styles.userLabel}>{msg.user_email || "Membro"}</span>
+              <p>{msg.content}</p>
+            </div>
+          </div>
         ))}
       </div>
 
-      <form onSubmit={sendMessage}>
+      <form onSubmit={sendMessage} className={styles.chatForm}>
         <input
+          className={styles.chatInput}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Digite sua mensagem"
+          placeholder="Digite sua mensagem..."
         />
-        <button type="submit">Enviar</button>
+        <button type="submit" className={styles.sendButton}>Enviar</button>
       </form>
 
       <ChatFooter room={roomData}/>
-
-
     </div>
   )
 }
