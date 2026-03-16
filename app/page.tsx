@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import styles from "./styles/auth.module.css"
+import styles from "@/styles/auth.module.css"
 
-import LoginForm from "./components/auth/LoginForm"
-import SignupForm from "./components/auth/SignupForm"
-import TogglePanel from "./components/auth/TogglePanel"
+import LoginForm from "@/components/auth/LoginForm"
+import SignupForm from "@/components/auth/SignupForm"
+import TogglePanel from "@/components/auth/TogglePanel"
 
 import { supabase } from "@/lib/supabase"
 

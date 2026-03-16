@@ -1,0 +1,38 @@
+.card{
+  min-width:220px;
+  height:140px;
+  display:flex;
+  padding:16px;
+  flex-direction:column;
+  justify-content:space-between;
+  background: linear-gradient(135deg,#2b2b3c,#3a3a55);
+  color:white;
+  border-radius:12px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.4);
+  cursor:pointer;
+  transition:all 0.25s ease;
+  
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.6);
+}
+
+.card h3{
+  font-size:1.2rem;
+  margin:0;
+}
+
+.card p{
+  font-size:0.8rem;
+  margin:2px 0;
+  color:#cfcfe6;
+}
+
+.badgePrivate{
+  background:#ff4d4f;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:.8rem;
+}

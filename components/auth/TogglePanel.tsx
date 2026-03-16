@@ -1,4 +1,4 @@
-import styles from "../../styles/auth.module.css"
+import styles from "@/styles/auth.module.css"
 
 export default function TogglePanel({ ativarLogin, ativarCadastro }: any) {
 

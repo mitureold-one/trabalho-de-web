@@ -1,0 +1,21 @@
+.carrossel {
+  margin: auto;
+  width: 90%;
+  overflow-x: auto; 
+  scroll-behavior: smooth; 
+  
+  
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+.carrossel::-webkit-scrollbar {
+  display: none; 
+}
+
+.group {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  width: max-content;
+}

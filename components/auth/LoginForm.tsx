@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import styles from "../../styles/auth.module.css"
+import styles from "@/styles/auth.module.css"
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function LoginForm() {
 
@@ -44,6 +45,12 @@ export default function LoginForm() {
           placeholder="Senha"
           onChange={(e)=>setSenha(e.target.value)}
         />
+        <p>
+          Esqueceu a senha?{" "}
+          <Link href="\reset-password">
+            <strong>Recuperar</strong>
+          </Link>
+        </p>
 
         <button type="submit">
           Entrar
