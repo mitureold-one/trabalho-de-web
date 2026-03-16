@@ -1,41 +1,179 @@
-.container{
-  width:100%;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:20px;
+/* sala.module.css */
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  /* Gradiente de fundo profundo para destacar o efeito Glass */
+  background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 100%);
+  color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-.title{
-  font-size:2rem;
-  margin-bottom:20px;
+.header {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  margin-bottom: 50px;
 }
 
-.createRoom{
-  display:flex;
-  gap:10px;
-  margin-bottom:40px;
+.header h1 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  color: #818cf8;
+  margin-bottom: 10px;
+  opacity: 0.8;
 }
 
-.input{
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  font-size:1rem;
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 40px;
+  background: linear-gradient(to right, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.button{
-  padding:10px 20px;
-  background:#4f46e5;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+/* Agrupador central dos inputs */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
 }
 
-.button:hover{
-  background:#4338ca;
+/* Container de Criar Sala (Estilo Pílula Moderno) */
+.createBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  width: 100%;
+  max-width: 650px;
+  transition: all 0.3s ease;
 }
 
+.createBox:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
 
+/* Input Minimalista */
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #64748b;
+}
+
+/* Checkbox estilizado */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 0 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Botão de Criar */
+.button {
+  padding: 10px 24px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 100px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button:hover:not(:disabled) {
+  background: #818cf8;
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Barra de Busca (Menor e mais discreta) */
+.searchBox {
+  width: 100%;
+  max-width: 400px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  color: white;
+  outline: none;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.searchInput:focus {
+  border-color: #818cf8;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* Main e Carrossel */
+.mainContent {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.carrosselContainer {
+  position: relative;
+  width: 100vw; /* Ocupa a largura total para o fade ficar nas bordas da tela */
+  padding: 40px 0;
+  
+  /* Efeito de fade nas laterais */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+}
+
+.emptyText {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  margin-top: 40px;
+}
