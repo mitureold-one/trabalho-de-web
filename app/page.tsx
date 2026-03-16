@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import styles from "@/styles/auth.module.css"
-
 import LoginForm from "@/components/auth/LoginForm"
 import SignupForm from "@/components/auth/SignupForm"
 import TogglePanel from "@/components/auth/TogglePanel"
@@ -15,30 +14,22 @@ async function testar(){
     .from("profiles")
     .select("*")
 
-  console.log(data)
-  console.log(error)
-
 }
 
 testar()
 
 export default function Home() {
-  
-
   const [active, setActive] = useState(false)
 
   return (
     <div className={styles.page}>
       <div className={`${styles.container} ${active ? styles.active : ""}`}>
-
         <SignupForm />
         <LoginForm />
-
         <TogglePanel
           ativarLogin={() => setActive(false)}
           ativarCadastro={() => setActive(true)}
         />
-
       </div>
     </div>
   )

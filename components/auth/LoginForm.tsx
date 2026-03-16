@@ -27,37 +27,36 @@ export default function LoginForm() {
     router.push("/salas")
   }
 
-  return (
+  return(
     <div className={`${styles["form-container"]} ${styles["sign-in"]}`}>
-
-      <form onSubmit={login}>
-
+      <form onSubmit={login} className={styles.form}> 
         <h1>Login</h1>
-
+        
         <input
           type="email"
           placeholder="Email"
-          onChange={(e)=>setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
           type="password"
           placeholder="Senha"
-          onChange={(e)=>setSenha(e.target.value)}
+          onChange={(e) => setSenha(e.target.value)}
+          required
         />
-        <p>
+
+        <p className={styles.forgotPassword}>
           Esqueceu a senha?{" "}
-          <Link href="\reset-password">
-            <strong>Recuperar</strong>
+          <Link href="/reset-password">
+            <strong className={styles.linkHighlight}>Recuperar</strong>
           </Link>
         </p>
 
         <button type="submit">
           Entrar
         </button>
-
       </form>
-
     </div>
   )
 }
