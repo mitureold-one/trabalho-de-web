@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { uploadAvatar } from "@/lib/profile" 
-import styles from "@/styles/auth.module.css" 
+import styles from "@/styles/auth/auth.module.css" 
 import { Camera } from "lucide-react"
 
 export default function Perfil() {

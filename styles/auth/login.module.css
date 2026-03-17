@@ -1,0 +1,132 @@
+/* --- CONFIGURAÇÃO ESTRUTURAL (SIGN-IN) --- */
+.sign-in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 2;
+    transition: all 0.6s ease-in-out;
+}
+
+/* Quando o cadastro está ativo */
+.container.active .sign-in {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 1;
+}
+
+/* --- FORMULÁRIO --- */
+.sign-in form {
+    background-color: var(--cor-terciaria);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 60px 0 20px; /* Recuo para a mancha vermelha na direita */
+}
+
+/* --- ELEMENTOS DO FORMULÁRIO --- */
+.sign-in form input, 
+.forgotPassword,
+.errorMessage,
+.button {
+    width: 100%;
+    max-width: 260px;
+    margin: 8px 0;
+}
+
+/* --- TEXTO E LINKS --- */
+.forgotPassword {
+    margin: 15px 0;
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+}
+
+.linkHighlight {
+    color: var(--cor-secundaria);
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 3px;
+    transition: all 0.2s ease;
+}
+
+.linkHighlight:hover {
+    text-decoration: underline;
+    filter: brightness(1.2);
+}
+
+/* --- MENSAGEM DE ERRO --- */
+.errorMessage {
+    background-color: rgba(255, 26, 26, 0.1);
+    color: #ff4d4d;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    border: 1px solid rgba(255, 26, 26, 0.2);
+    box-sizing: border-box;
+    animation: shake 0.4s ease-in-out;
+}
+
+/* --- O BOTÃO "GLOW GLASS" --- */
+.button {
+    background-color: var(--cor-secundaria);
+    color: #fff;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--cor-secundaria), 0 0 40px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Efeito de raio de luz no botão */
+.button::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 20%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(30deg);
+    transition: all 0.5s ease;
+}
+
+.button:hover::after {
+    left: 120%;
+}
+
+.button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.button:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+    opacity: 0.7;
+    border-color: transparent;
+}
+
+/* --- ANIMAÇÕES --- */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import styles from "@/styles/auth.module.css"
+import styles from "@/styles/auth/auth.module.css"
 import { supabase } from "@/lib/supabase"
 import { uploadAvatar } from "@/lib/profile" 
 
