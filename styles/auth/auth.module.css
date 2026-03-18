@@ -1,9 +1,15 @@
 .page {
+  /* Garante que ocupe a tela toda independentemente do layout global */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: var(--cor-terciaria); 
+  background-color: var(--cor-terciaria);
+  z-index: 9999; /* Fica por cima de qualquer sidebar que tente aparecer */
 }
 
 .container {
@@ -13,7 +19,7 @@
   position: relative;
   overflow: hidden; 
   width: 768px;
-  max-width: 100%;
+  max-width: 95%; /* Segurança para telas menores */
   min-height: 480px;
   display: flex;
 }
@@ -65,3 +71,10 @@
   }
 }
 
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    min-height: 100vh; /* No celular vira tela cheia sem bordas se quiser */
+    border-radius: 0;
+  }
+}

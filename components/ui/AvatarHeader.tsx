@@ -3,10 +3,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import styles from "@/styles/avatar.header.module.css";
+import styles from "@/styles/ui/avatar.header.module.css";
 import { useRouter } from "next/navigation"
 
-export default function AvatarHeader() {
+// Adicione a interface para a prop
+interface AvatarHeaderProps {
+  isCollapsed?: boolean;
+}
+
+export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
   const [profile, setProfile] = useState<{ nome: string; avatar_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -44,31 +49,44 @@ export default function AvatarHeader() {
   if (loading) return <div className={styles.loadingSmall}>...</div>;
 
   return (
-    <div className={styles.userContainer}> 
-  
-      <Link href="/perfil" className={styles.avatarWrapper}>
-        {profile?.avatar_url ? (
-          <img src={profile.avatar_url} alt="Perfil" className={styles.avatarImg} />
-        ) : (
-          <div className={styles.avatarDefault}>👤</div>
+    /* Adicionamos a classe 'collapsed' dinamicamente ao container */
+    <aside 
+      className={`${styles.userContainer} ${isCollapsed ? styles.collapsed : ""}`} 
+      aria-label="Perfil do usuário"
+    > 
+      
+      <Link href="/perfil" className={styles.profileLink}>
+        <div className={styles.avatarWrapper}>
+          {profile?.avatar_url ? (
+            <img 
+              src={profile.avatar_url} 
+              alt={`Foto de ${profile?.nome}`} 
+              className={styles.avatarImg} 
+            />
+          ) : (
+            <div className={styles.avatarDefault}>👤</div>
+          )}
+        </div>
+
+        {/* Só mostra o nome se NÃO estiver colapsado */}
+        {!isCollapsed && (
+          <div className={styles.userInfo}>
+            <strong className={styles.userName}>
+              {profile?.nome || "Usuário"}
+            </strong>
+          </div>
         )}
       </Link>
 
-      <div className={styles.userInfo}>
-        <span className={styles.userName}>
-          {profile?.nome || "Usuário"}
-        </span>
-        <button 
-          className={styles.logoutBtn} 
-          onClick={async () => {
-            await supabase.auth.signOut();
-            window.location.href = "/"; 
-          }}
-        >
-          Sair
-        </button>
-      </div>
+      <button 
+        type="button"
+        className={styles.logoutBtnRound} 
+        onClick={handleLogout} 
+        title="Sair da conta"
+      >
+        ⏻
+      </button>
 
-    </div>
+    </aside>
   );
 }

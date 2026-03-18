@@ -1,179 +1,159 @@
-/* sala.module.css */
-
 .container {
-  width: 100%;
-  min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.titleArea h1 {
+    font-size: 2rem;
+    color: var(--cor-terciaria);
+    margin: 0;
+}
+
+.titleArea p {
+    color: #666;
+    margin: 5px 0 0 0;
+}
+
+.searchBar {
+    flex: 1;
+    max-width: 400px;
+    min-width: 250px;
+}
+
+.searchBar input {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: white;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.searchBar input:focus {
+    border-color: var(--cor-secundaria);
+}
+
+/* Card de Criação de Sala */
+.createCard {
+    background: var(--cor-quintenaria);
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.createCard input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    padding: 10px;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+}
+
+.createActions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.createCard button {
+    background-color: var(--cor-terciaria);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.createCard button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.createCard button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.roomGrid {
+    padding-bottom: 50px;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 100px 0;
+    color: #999;
+}
+
+@media (max-width: 768px) {
+    .createCard {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .pageHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.pageHeader {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 60px 20px;
-  /* Gradiente de fundo profundo para destacar o efeito Glass */
-  background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 100%);
-  color: #f8fafc;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-}
-
-.header {
-  width: 100%;
-  max-width: 800px;
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.header h1 {
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2rem;
-  color: #818cf8;
-  margin-bottom: 10px;
-  opacity: 0.8;
-}
-
-.title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
   margin-bottom: 40px;
-  background: linear-gradient(to right, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Agrupador central dos inputs */
-.controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
-  width: 100%;
 }
 
-/* Container de Criar Sala (Estilo Pílula Moderno) */
-.createBox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 8px 8px 24px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 100px;
-  width: 100%;
-  max-width: 650px;
-  transition: all 0.3s ease;
-}
-
-.createBox:focus-within {
-  border-color: #6366f1;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* Input Minimalista */
-.input {
-  flex: 1;
-  background: transparent;
-  border: none;
+.createBtn {
+  background: var(--cor-secundaria, #7000ff); /* Use sua cor principal */
   color: white;
-  font-size: 1rem;
-  outline: none;
-}
-
-.input::placeholder {
-  color: #64748b;
-}
-
-/* Checkbox estilizado */
-.checkboxLabel {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
-  color: #94a3b8;
-  cursor: pointer;
-  white-space: nowrap;
-  padding: 0 10px;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Botão de Criar */
-.button {
-  padding: 10px 24px;
-  background: #6366f1;
-  color: white;
-  border: none;
-  border-radius: 100px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(112, 0, 255, 0.4);
+  filter: brightness(1.1);
 }
 
-.button:hover:not(:disabled) {
-  background: #818cf8;
-  transform: translateY(-1px);
-}
-
-.button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Barra de Busca (Menor e mais discreta) */
-.searchBox {
-  width: 100%;
-  max-width: 400px;
-}
-
-.searchInput {
-  width: 100%;
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 100px;
-  color: white;
-  outline: none;
-  font-size: 0.9rem;
-  text-align: center;
-  transition: all 0.3s;
-}
-
-.searchInput:focus {
-  border-color: #818cf8;
-  background: rgba(255, 255, 255, 0.07);
-}
-
-/* Main e Carrossel */
-.mainContent {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.carrosselContainer {
-  position: relative;
-  width: 100vw; /* Ocupa a largura total para o fade ficar nas bordas da tela */
-  padding: 40px 0;
-  
-  /* Efeito de fade nas laterais */
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 15%,
-    black 85%,
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 15%,
-    black 85%,
-    transparent
-  );
-}
-
-.emptyText {
-  text-align: center;
-  color: #64748b;
-  font-style: italic;
-  margin-top: 40px;
+.createBtn:active {
+  transform: translateY(0);
 }

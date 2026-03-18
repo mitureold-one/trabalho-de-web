@@ -1,6 +1,5 @@
 "use client"
 import styles from "@/styles/modal.module.css"
-import { X } from "lucide-react" 
 
 interface ModalProps {
   isOpen: boolean

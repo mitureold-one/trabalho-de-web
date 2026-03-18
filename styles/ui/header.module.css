@@ -1,0 +1,186 @@
+/* --- CONFIGURAÇÃO BASE (MOBILE-FIRST) --- */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: rgba(11, 10, 29, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- LOGO WRAPPER --- */
+.logoWrapper {
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* --- ÁREA DE NAVEGAÇÃO --- */
+.nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.navList {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+}
+
+.navList li {
+    width: 100%;
+}
+
+.navList li a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* --- ESTILO DOS ÍCONES (TRATANDO IMAGENS GRANDES) --- */
+.navIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Redimensionando de 500px para o tamanho de ícone */
+    width: 24px; 
+    height: 24px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.navIcon img {
+    width: 100%;
+    height: 100%;
+    /* Mantém a qualidade da imagem ao reduzir */
+    object-fit: contain; 
+    image-rendering: -webkit-optimize-contrast; 
+    /* Efeito visual */
+    filter: brightness(0) invert(1) opacity(0.7); 
+    transition: all 0.3s ease;
+}
+
+.navList li a:hover, .activeLink {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.navList li a:hover img, .activeLink img {
+    filter: brightness(0) invert(1) opacity(1);
+    transform: scale(1.1);
+}
+
+/* --- BOTÃO DE TOGGLE --- */
+.toggleBtn {
+    position: absolute;
+    right: -14px;
+    top: 35px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--cor-secundaria);
+    color: white;
+    border: 2px solid var(--cor-terciaria);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 1001;
+    transition: all 0.2s ease;
+}
+
+/* --- ADAPTAÇÃO DESKTOP (SIDEBAR) --- */
+@media (min-width: 769px) {
+    .header {
+        width: 260px;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 40px 15px;
+    }
+
+    .toggleBtn { display: flex; }
+
+    .nav {
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        margin-top: 40px;
+    }
+
+    .navList {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .navList li a {
+        width: 100%;
+        font-size: 0.95rem;
+        padding: 12px 15px;
+    }
+
+    /* --- ESTADO COLLAPSED (CENTRALIZAÇÃO TOTAL) --- */
+    .collapsed {
+        width: 85px !important;
+        padding: 40px 0; /* Remove padding lateral para centralizar */
+    }
+
+    .collapsed .logoWrapper {
+        transform: scale(0.6);
+    }
+
+    .collapsed .navList {
+        align-items: center; /* Centraliza as LI horizontalmente */
+    }
+
+    .collapsed .navList li a {
+        justify-content: center; /* Centraliza a imagem dentro do link */
+        padding: 15px 0;
+        gap: 0;
+    }
+
+    .collapsed .navIcon {
+        width: 28px; /* Ícone um pouco maior quando está sozinho */
+        height: 28px;
+    }
+
+    .collapsed .navText {
+        display: none;
+    }
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    .navList { display: none; }
+    .header { height: 70px; }
+}

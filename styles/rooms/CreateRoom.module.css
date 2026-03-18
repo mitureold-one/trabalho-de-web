@@ -1,0 +1,46 @@
+/* Fundo que escurece a página */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7); /* Preto com 70% de transparência */
+  backdrop-filter: blur(8px);    /* Efeito de desfoque no fundo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;                 /* Garante que fique acima de tudo */
+  animation: fadeIn 0.3s ease;
+}
+
+/* O Card que você já tem, mas com ajuste de tamanho */
+.createCard {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 28px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.closeBtn:hover { color: #fff; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

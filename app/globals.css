@@ -1,16 +1,69 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
 
-:root{
-  --cor-primaria: #061644;
-  --cor-secundaria: #f50911;
-  --cor-terciaria: #0b0a1d;
-  --cor-quaternaria: #1c1c3a; 
-  --cor-quintenaria: #ffffff; 
+:root {
+    --cor-primaria: #061644;
+    --cor-secundaria: #f50911;
+    --cor-terciaria: #0b0a1d;
+    --cor-quaternaria: #1c1c3a; 
+    --cor-quintenaria: #ffffff; 
+    
+    /* Variáveis RGB para efeitos de transparência (rgba) */
+    --cor-secundaria-rgb: 245, 9, 17;
+    --cor-terciaria-rgb: 11, 10, 29;
+}
+
+/* ESTRUTURA BASE */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--cor-terciaria); /* Fundo padrão do app */
+}
+
+.main-content {
+    flex: 1;
+    width: 100%;
+    /* Transição global para margens e padding */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- COMPUTADOR (SIDEBAR) --- */
+@media (min-width: 769px) {
+    .app-layout {
+        flex-direction: row;
+    }
+    
+    .main-content {
+        margin-left: 260px; /* Largura da Sidebar Aberta */
+        padding: 40px;
+    }
+
+    /* ESTADO RETRAÍDO */
+    .sidebar-collapsed .main-content {
+        margin-left: 85px; /* Largura da Sidebar Fechada */
+    }
+}
+
+/* --- CELULAR (HEADER TOPO) --- */
+@media (max-width: 768px) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .main-content {
+        margin-top: 70px; /* Altura do Header Mobile */
+        padding: 20px;
+        margin-left: 0; /* Garante que não herde margem do desktop */
+    }
+    
+    /* No mobile, ignoramos o estado "collapsed" para não quebrar o layout */
+    .sidebar-collapsed .main-content {
+        margin-left: 0;
+    }
 }

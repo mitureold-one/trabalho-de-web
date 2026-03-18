@@ -1,48 +1,78 @@
 import { supabase } from "@/lib/supabase"
 
-export async function createRoom(roomName: string, isPrivate: boolean) {
+// Função auxiliar para traduzir os códigos técnicos do Postgres/Supabase
+function handleSupabaseError(error: any): string {
+  if (error.code === '23505') return "Já existe uma sala com este nome! 📛";
+  if (error.code === '42P01') return "Tabela não encontrada no banco. 🛠️";
+  if (error.message?.includes("fetch")) return "Erro de conexão! Verifique sua internet. 🌐";
+  if (error.message?.includes("JWT")) return "Sua sessão expirou. Faça login novamente. 🔑";
+  
+  return error.message || "Ocorreu um erro inesperado.";
+}
 
-  if(!roomName.trim()){
-    throw new Error("Digite um nome para a sala")
-  }
-
-  const { data:userData, error:userError } = await supabase.auth.getUser()
-
-  if(userError || !userData?.user){
-    throw new Error("Usuário não autenticado")
-  }
-
-  const userId = userData.user.id
+export async function createRoom(roomName: string, isPrivate: boolean, password?: string | null) {
+  const { data: userData, error: userError } = await supabase.auth.getUser()
+  if (userError || !userData?.user) throw new Error("Usuário não autenticado")
 
   const { error } = await supabase
     .from("rooms")
     .insert({
       nome: roomName,
-      id_user: userId,
-      is_private: isPrivate
+      id_user: userData.user.id,
+      is_private: isPrivate,
+      password: isPrivate ? password : null 
     })
 
-  if(error){
-    throw error
-  }
+  if (error) throw new Error(handleSupabaseError(error));
 }
 
+// --- O GETROOMS VOLTOU ---
 export async function getRooms() {
-
   const { data, error } = await supabase
     .from("rooms")
     .select(`
-      *,
+      id_room,
+      nome,
+      created_at,
+      is_private,
+      id_user,
       creator:profiles!rooms_id_user_fkey (
         nome
       )
-    `)
-    .order("created_at", { ascending:false })
+    `) // Lembre-se: não selecionamos a 'password' por segurança
+    .order("created_at", { ascending: false });
 
-  if(error){
-    throw error
+  if (error) throw new Error(handleSupabaseError(error));
+  return data;
+}
+
+export async function joinPublicRoom(roomId: string) {
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData?.user) throw new Error("Você precisa estar logado! 👤");
+
+  const { error } = await supabase
+    .from("room_members")
+    .upsert({ 
+      room_id: roomId, 
+      user_id: userData.user.id,
+      role: 'member' 
+    });
+
+  if (error) throw new Error(handleSupabaseError(error));
+  return true;
+}
+
+export async function verifyAndJoin(roomId: string, password: string) {
+  const { data, error } = await supabase.rpc('join_private_room', {
+    target_room_id: roomId,
+    typed_password: password
+  });
+
+  if (error) throw new Error(handleSupabaseError(error));
+
+  if (data === false) {
+    throw new Error("Senha incorreta! Tente novamente. ❌");
   }
-  return data
 
-  
+  return true;
 }

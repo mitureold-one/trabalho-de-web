@@ -1,22 +1,20 @@
 "use client";
 
 import styles from "@/styles/sala.module.css";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { createRoom, getRooms } from "@/lib/rooms"; 
+import { useEffect, useState } from "react"; 
 import RoomList from "@/components/sala/RoomList";
+import { getRooms } from "@/lib/rooms"; 
+import CreateRoomModal from "@/components/sala/CreateRoomModal";
 
-export default function SalasPage() {
-  const router = useRouter();
-  const [rooms, setRooms] = useState<any[]>([]);
-  const [roomName, setRoomName] = useState("");
-  const [isPrivate, setPrivate] = useState(false);
-  const [loading, setLoading] = useState(false); 
-  const [initialLoading, setInitialLoading] = useState(true); 
+export default function HomePage() {
+  const [rooms, setRooms] = useState<any[]>([]); 
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Filtragem em tempo real
   const filteredRooms = rooms.filter(room => 
-  room.nome.toLowerCase().includes(searchTerm.toLowerCase())
-);
+    room.nome?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   async function loadRooms() {
     try {
@@ -24,8 +22,6 @@ export default function SalasPage() {
       setRooms(data || []);
     } catch (error) {
       console.error("Erro ao carregar salas:", error);
-    } finally {
-      setInitialLoading(false);
     }
   }
 
@@ -33,76 +29,52 @@ export default function SalasPage() {
     loadRooms();
   }, []);
 
-  async function handleCreateRoom() {
-    if (!roomName.trim()) return; 
-
-    setLoading(true);
-    try {
-      await createRoom(roomName, isPrivate);
-      
-      setRoomName("");
-      setPrivate(false);
-      
-      await loadRooms(); 
-    } catch (error) {
-      console.error("Erro ao criar sala:", error);
-      alert("Houve um erro ao criar a sala. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>Chat Da Galera !</h1>
-        <h2 className={styles.title}>Salas Disponíveis</h2>
+      <header className={styles.pageHeader}>
+        <div className={styles.titleArea}>
+          <h1>Salas Disponíveis</h1>
+          <p>Encontre sua galera ou crie um novo espaço</p>
+        </div>
         
-        <div className={styles.controls}>
-          <div className={styles.createBox}>
+        <div className={styles.headerActions}> 
+          <div className={styles.searchBar}>
             <input 
-              className={styles.input} 
-              placeholder="Nova sala..." 
-              value={roomName}
-              onChange={(e) => setRoomName(e.target.value)}/>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={isPrivate}
-                  onChange={(e) => setPrivate(e.target.checked)}
-                  disabled={loading} />
-                  Sala privada
-              </label>
-            
-            <button
-              className={styles.button}
-              onClick={handleCreateRoom}
-              disabled={loading || !roomName.trim()} >
-              {loading ? "Criando..." : "Criar"}
-            </button>
-          </div>
-
-          <div className={styles.searchBox}>
-            <input 
-              className={styles.searchInput} 
-              placeholder="🔎 Buscar sala..." 
+              type="text"
+              placeholder="🔎 Buscar sala pelo nome..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          
+          <button 
+            className={styles.createBtn} 
+            onClick={() => setIsModalOpen(true)}
+          >
+            <span>+</span> Nova Sala
+          </button>
+
+          <CreateRoomModal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+            loadRooms={loadRooms} 
+          />
         </div>
       </header>
 
-      <main className={styles.mainContent}>
-       <div className={styles.carrosselContainer}>
-          {rooms.length > 0 ? (
-            <RoomList rooms={filteredRooms} />
-          ) : (
-            <p className={styles.emptyText}>Nenhuma sala encontrada.</p>
-          )}
-       </div>
+      <main className={styles.roomGrid}>
+        {filteredRooms.length > 0 ? (
+          <RoomList rooms={filteredRooms} />
+        ) : (
+          <div className={styles.emptyState}>
+            <p>
+              {searchTerm 
+                ? `Nenhuma sala encontrada para "${searchTerm}"` 
+                : "Ainda não há salas criadas. Seja o primeiro!"}
+            </p>
+          </div>
+        )}
       </main>
-
     </div>
   );
 }
