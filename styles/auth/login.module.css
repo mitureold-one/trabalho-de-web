@@ -1,130 +1,151 @@
-/* --- CONFIGURAÇÃO ESTRUTURAL (SIGN-IN) --- */
-.sign-in {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    z-index: 2;
-    transition: all 0.6s ease-in-out;
-}
-
-/* Quando o cadastro está ativo */
-.container.active .sign-in {
-    transform: translateX(100%);
-    opacity: 0;
-    z-index: 1;
-}
-
-/* --- FORMULÁRIO --- */
-.sign-in form {
-    background-color: var(--cor-terciaria);
+.form {
+    background-color: var(--cor-quintenaria);
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    height: 100%;
+    align-items: center;
+    height: 100%; 
     width: 100%;
-    box-sizing: border-box;
-    padding: 0 60px 0 20px; /* Recuo para a mancha vermelha na direita */
-}
-
-/* --- ELEMENTOS DO FORMULÁRIO --- */
-.sign-in form input, 
-.forgotPassword,
-.errorMessage,
-.button {
-    width: 100%;
-    max-width: 260px;
-    margin: 8px 0;
-}
-
-/* --- TEXTO E LINKS --- */
-.forgotPassword {
-    margin: 15px 0;
-    font-size: 13px;
-    color: #fff;
+    /* Padding superior de 80px para descer o conteúdo e 45px nas laterais */
+    padding: 80px 45px 20px 45px; 
     text-align: center;
+    box-sizing: border-box;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    color: var(--cor-terciaria);
+    margin: 0 0 30px 0; 
+    font-weight: 800;
+}
+
+/* CONTAINER DE INPUTS */
+.inputFields {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o bloco de inputs */
+    gap: 15px;
+}
+
+.inputFields input {
+    background-color: #fff;
+    border: 1px solid #d1d1d1;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+    outline: none;
+    width: 100%;
+    max-width: 320px; /* Base de largura para todo o formulário */
+    transition: all 0.3s ease;
+}
+
+.inputFields input:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+.inputFields input::placeholder {
+    color: #999;
+    font-weight: 400;
+}
+
+/* ESQUECEU A SENHA - ALINHADO PERFEITAMENTE À DIREITA DO INPUT */
+.forgotPassword {
+    width: 100%;
+    max-width: 320px; 
+    display: flex;
+    justify-content: space-between;; 
+    font-size: 13px;
+    color: #777;
+    margin-top: -5px; /* Gruda o texto no input de cima */
+    padding-right: 2px;
+
 }
 
 .linkHighlight {
     color: var(--cor-secundaria);
     font-weight: 700;
+    margin-left: 5px;
+    text-decoration: none;
     cursor: pointer;
-    margin-left: 3px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .linkHighlight:hover {
+    opacity: 0.7;
     text-decoration: underline;
-    filter: brightness(1.2);
 }
 
-/* --- MENSAGEM DE ERRO --- */
-.errorMessage {
-    background-color: rgba(255, 26, 26, 0.1);
-    color: #ff4d4d;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    border: 1px solid rgba(255, 26, 26, 0.2);
-    box-sizing: border-box;
-    animation: shake 0.4s ease-in-out;
-}
-
-/* --- O BOTÃO "GLOW GLASS" --- */
+/* BOTÃO COM EFEITO SWIPE */
 .button {
     background-color: var(--cor-secundaria);
     color: #fff;
-    font-size: 12px;
-    padding: 10px 45px;
+    font-size: 13px;
+    padding: 14px;
+    width: 100%;
+    max-width: 320px; 
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: 10px;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 1px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    margin-top: 25px;
     transition: all 0.3s ease;
     backdrop-filter: blur(4px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 0 20px var(--cor-secundaria), 0 0 40px rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px var(--cor-secundaria), 0 0 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Efeito de raio de luz no botão */
 .button::after {
     content: "";
     position: absolute;
     top: -50%;
-    left: -60%;
-    width: 20%;
+    left: -110%;
+    width: 25%;
     height: 200%;
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.35), 
+        transparent
+    );
     transform: rotate(30deg);
-    transition: all 0.5s ease;
+    transition: all 0.6s ease;
 }
 
 .button:hover::after {
-    left: 120%;
+    left: 130%;
 }
 
 .button:active:not(:disabled) {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 .button:disabled {
-    background-color: #444;
+    background-color: #999;
     cursor: not-allowed;
-    opacity: 0.7;
-    border-color: transparent;
 }
 
-/* --- ANIMAÇÕES --- */
+/* MENSAGEM DE ERRO */
+.errorMessage {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 15px;
+    font-weight: 500;
+    animation: shake 0.4s ease-in-out;
+}
+
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-4px); }

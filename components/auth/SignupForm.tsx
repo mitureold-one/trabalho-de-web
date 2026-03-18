@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import styles from "@/styles/auth/auth.module.css"
-import { supabase } from "@/lib/supabase"
-import { uploadAvatar } from "@/lib/profile" 
+import styles from "@/styles/auth/signup.module.css"
+import { registrarUsuario } from "@/lib/auth" 
+
 
 export default function SignupForm() {
   const [file, setFile] = useState<File | null>(null) 
@@ -12,6 +12,8 @@ export default function SignupForm() {
   const [senha, setSenha] = useState("")
   const [nome, setNome] = useState("")
   const [loading, setLoading] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null) 
+  const [successMsg, setSuccessMsg] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -21,99 +23,105 @@ export default function SignupForm() {
     }
   }
 
-  async function registrar(e: React.FormEvent) {
-  e.preventDefault()
-  setLoading(true)
+  async function handleSignup(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setErrorMsg(null)
+    
 
-  try {
-    // 1. Criar o usuário no Supabase Auth
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email: email,
-      password: senha,
-      options: { 
-        data: { nome: nome } 
-      }
-    })
+    try {
+      await registrarUsuario({ email, senha, nome, file })
 
-    if (signUpError) throw signUpError
-    const user = data.user
-
-    if (user) {
-      let avatarUrl = ""
-
-      // 2. Se o usuário selecionou uma foto, faz o upload para o Storage
-      if (file) {
-        try {
-          avatarUrl = await uploadAvatar(file, user.id)
-        } catch (uploadErr) {
-          console.error("Erro no upload da imagem:", uploadErr)
-          // Se a foto falhar, avisamos mas não travamos o processo se não quiser
-          alert("Usuário criado, mas houve um erro ao salvar a foto.")
-        }
-      }
-
-      // 3. ATUALIZAR os dados na tabela 'profiles'
-      // Usamos .update() porque a TRIGGER já criou a linha com o id_user
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update({
-          nome: nome,
-          email: email,
-          avatar_url: avatarUrl 
-        })
-        .eq("id_user", user.id) // Filtra pelo ID do usuário recém-criado
-
-      if (profileError) {
-        // Se der erro aqui, pode ser que a trigger ainda não terminou
-        // Tentamos um .upsert() como plano B ou lançamos o erro
-        throw profileError
-      }
-
-      // 4. Limpeza e Feedback
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-      alert("Conta criada com sucesso!")
-      
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setSuccessMsg("Conta criada! Verifique seu e-mail para confirmar.");
+        setErrorMsg("");
+              
+    } catch (err: any) {
+      const msg = err.message === "User already registered" 
+        ? "Este e-mail já está em uso." 
+        : err.message
+      setErrorMsg(msg)
+    } finally {
+      setLoading(false)
     }
-  } catch (err: any) {
-    console.error("Erro no registro:", err.message)
-    alert(err.message)
-  } finally {
-    setLoading(false)
   }
-}
 
   return (
-    <div className={`${styles["form-container"]} ${styles["sign-up"]}`}>
-      <form onSubmit={registrar}>
-        <h1>Crie sua conta</h1>
+    <form className={styles.form} onSubmit={handleSignup}>
+      {successMsg && (
+        <div className={styles.successMessage}>
+          <span className={styles.successIcon}>✔</span>
+          {successMsg}
+        </div>
+      )}
+
+      {errorMsg && (
+          <span className={styles.errorMessage} role="alert">
+            {errorMsg}
+          </span>
+        )}
         
+      <header className={styles.header}>
+        <h1>Crie sua conta</h1>
+      </header>
+
+      <section className={styles.avatarSection}>
         <div className={styles.avatarContainer}>
-          <p>Seu Avatar:</p>
           <label htmlFor="avatar-input" className={styles.avatarLabel}>
             <img 
               src={previewUrl || "/Avatar_default.png"} 
               alt="Avatar Preview" 
               className={styles.avatarImage}
             />
-            <div className={styles.cameraIcon}>📸</div>
+            <div className={styles.cameraIcon} aria-hidden="true">📸</div>
           </label>
+
           <input 
-            id="avatar-input"
+            id="avatar-input" 
             type="file" 
             accept="image/*" 
-            onChange={handleFileChange}
-            style={{ display: 'none' }} 
+            onChange={handleFileChange} 
+            className={styles.hiddenInput} 
           />
+
+          <p>Escolha sua foto</p>
         </div>
+      </section>
 
-        <input type="text" placeholder="Nome" onChange={(e) => setNome(e.target.value)} required />
-        <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Senha" onChange={(e) => setSenha(e.target.value)} required />
+      <fieldset className={styles.inputFields}>
+        <input 
+          type="text" 
+          placeholder="Nome" 
+          value={nome} 
+          onChange={(e) => setNome(e.target.value)} 
+          required 
+        />
 
-        <button type="submit" disabled={loading}>
+        <input 
+          type="email" 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          required 
+        />
+
+        <input 
+          type="password" 
+          placeholder="Senha" 
+          value={senha} 
+          onChange={(e) => setSenha(e.target.value)} 
+          required 
+        />
+        
+        
+      </fieldset>
+
+      <footer className={styles.actions}>
+        <button type="submit" disabled={loading} className={styles.button}>
           {loading ? "Processando..." : "Inscrever-se"}
         </button>
-      </form>
-    </div>
+      </footer>
+
+    </form>
   )
 }

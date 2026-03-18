@@ -1,237 +1,67 @@
-/* --- BASE E VARIÁVEIS --- */
 .page {
-    background: linear-gradient(to right, #271434, var(--cor-primaria));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--cor-terciaria); 
 }
 
 .container {
-    background-color: var(--cor-terciaria);
-    border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-    position: relative;
-    overflow: hidden;
-    width: 768px;
-    max-width: 100%;
-    min-height: 520px; /* Aumentado levemente para caber o avatar */
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden; 
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+  display: flex;
 }
 
-/* --- FORMULÁRIOS --- */
-.container form {
-    background-color: var(--cor-terciaria);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 40px;
-    height: 100%;
+/* FORM BASE */
+.formContainer {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transition: all 0.6s ease-in-out;
+  background-color: var(--cor-quintenaria);
 }
 
-.container input {
-    background-color: #eee;
-    border: none;
-    margin: 8px 0;
-    padding: 10px 15px;
-    font-size: 13px;
-    border-radius: 8px;
-    width: 100%;
-    outline: none;
-    color: #333;
+/* LOGIN */
+.signIn {
+  left: 0;
+  z-index: 2;
 }
 
-.container button {
-    background-color: var(--cor-secundaria);
-    color: #fff;
-    font-size: 12px;
-    padding: 10px 45px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: transform 80ms ease-in;
+/* SIGNUP */
+.signUp {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
 }
 
-.container button:active {
-    transform: scale(0.95);
+/* ESTADO ATIVO */
+.container.active .signIn {
+  transform: translateX(100%);
+  opacity: 0; 
 }
 
-.container button.hidden {
-    background-color: transparent;
-    border-color: #fff;
-}
-
-/* --- ESTRUTURA DOS CONTAINERS (SIGN-IN/SIGN-UP) --- */
-.form-container {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    transition: all 0.6s ease-in-out;
-}
-
-.sign-in {
-    left: 0;
-    width: 50%;
-    z-index: 2;
-}
-
-.container.active .sign-in {
-    transform: translateX(100%);
-    opacity: 0; /* Garante que o login suma totalmente no modo cadastro */
-}
-
-.sign-up {
-    left: 0;
-    width: 50%;
-    opacity: 0;
-    z-index: 1;
-}
-
-.container.active .sign-up {
-    transform: translateX(100%);
-    opacity: 1;
-    z-index: 5;
-    animation: move 0.6s;
+.container.active .signUp {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: move 0.6s;
 }
 
 @keyframes move {
-    0%, 49.99% {
-        opacity: 0;
-        z-index: 1;
-    }
-    50%, 100% {
-        opacity: 1;
-        z-index: 5;
-    }
+  0%, 49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
 }
 
-/* --- TOGGLE (O PAINEL DESLIZANTE) --- */
-.toggle-container {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 50%;
-    height: 100%;
-    overflow: hidden;
-    transition: all 0.6s ease-in-out;
-    border-radius: 150px 0 0 100px;
-    z-index: 1000;
-}
-
-.container.active .toggle-container {
-    transform: translateX(-100%);
-    border-radius: 0 150px 100px 0;
-}
-
-.toggle {
-    background: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria));
-    color: #fff;
-    position: relative;
-    left: -100%;
-    height: 100%;
-    width: 200%;
-    transform: translateX(0);
-    transition: all 0.6s ease-in-out;
-}
-
-.container.active .toggle {
-    transform: translateX(50%);
-}
-
-.toggle-panel {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 30px;
-    text-align: center;
-    top: 0;
-    transition: all 0.6s ease-in-out;
-}
-
-.toggle-left {
-    transform: translateX(-200%);
-}
-
-.container.active .toggle-left {
-    transform: translateX(0);
-}
-
-.toggle-right {
-    right: 0;
-    transform: translateX(0);
-}
-
-.container.active .toggle-right {
-    transform: translateX(200%);
-}
-
-/* --- AVATAR UPLOAD (O QUE ADICIONAMOS) --- */
-.avatarContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.avatarLabel {
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.avatarLabel:hover {
-    transform: scale(1.05);
-}
-
-.avatarImage {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--cor-secundaria);
-    background-color: #eee;
-}
-
-.cameraIcon {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: var(--cor-secundaria);
-    color: #fff;
-    border-radius: 50%;
-    padding: 6px;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.avatarContainer p {
-    font-size: 11px !important;
-    margin: 5px 0 0 0 !important;
-    color: #aaa;
-}
-
-/* --- AJUSTES TEXTOS --- */
-.container h1 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
-    color: #fff;
-}
-
-.container p {
-    font-size: 14px;
-    color: #fff;
-}

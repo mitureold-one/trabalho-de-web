@@ -9,6 +9,8 @@
 
 :root{
   --cor-primaria: #061644;
-  --cor-secundaria:#f50911 ;
-  --cor-terciaria:#0b0a1d;
+  --cor-secundaria: #f50911;
+  --cor-terciaria: #0b0a1d;
+  --cor-quaternaria: #1c1c3a; 
+  --cor-quintenaria: #ffffff; 
 }

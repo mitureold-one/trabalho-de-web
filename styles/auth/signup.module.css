@@ -1,0 +1,204 @@
+.form {
+    background-color: var(--cor-quintenaria);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Mantém Título no topo e Botão na base */
+    height: 100%;
+    width: 100%;
+    /* Padding otimizado para não empurrar o botão para fora */
+    padding: 35px 45px 25px 45px; 
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.header h1 {
+    font-size: 1.8rem; /* Reduzido para ganhar espaço vertical */
+    color: var(--cor-terciaria);
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+/* SEÇÃO DO AVATAR COMPACTA */
+.avatarSection {
+    margin: 10px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.avatarContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.avatarContainer p {
+    font-size: 11px;
+    color: #888;
+    margin: 0;
+}
+
+.avatarLabel {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.avatarLabel:hover {
+    transform: scale(1.05);
+}
+
+.avatarImage {
+    width: 65px; /* Reduzido de 80px para 65px para acomodar as mensagens */
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cameraIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--cor-primaria);
+    color: #fff;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    font-size: 10px;
+}
+
+.hiddenInput {
+    display: none;
+}
+
+/* INPUTS PADRONIZADOS */
+.inputFields {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* Espaçamento menor entre campos */
+}
+
+.inputFields input {
+    background-color: #fff;
+    border: 1px solid #d1d1d1;
+    padding: 10px 18px;
+    font-size: 14px;
+    border-radius: 10px;
+    outline: none;
+    width: 100%;
+    max-width: 300px; /* Leve redução na largura para respiro lateral */
+    transition: all 0.3s ease;
+}
+
+.inputFields input:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+/* MENSAGENS DE FEEDBACK (FINAS PARA NÃO VAZAR) */
+.successMessage, .errorMessage {
+    width: 100%;
+    max-width: 300px;
+    font-size: 12px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    animation: fadeInDown 0.4s ease forwards;
+}
+
+.successMessage {
+    background-color: rgba(46, 204, 113, 0.1);
+    border: 1px solid #2ecc71;
+    color: #27ae60;
+}
+
+.errorMessage {
+    background-color: rgba(231, 76, 60, 0.1);
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    animation: shake 0.4s ease-in-out, fadeInDown 0.4s ease forwards;
+}
+
+.successIcon {
+    background-color: #2ecc71;
+    color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+}
+
+/* BOTÃO DE AÇÃO */
+.button {
+    background-color: var(--cor-secundaria);
+    color: #fff;
+    font-size: 13px;
+    padding: 12px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--cor-secundaria);
+}
+
+.button::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -110%;
+    width: 25%;
+    height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: rotate(30deg);
+    transition: all 0.6s ease;
+}
+
+.button:hover::after {
+    left: 130%;
+}
+
+/* ANIMAÇÕES */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
