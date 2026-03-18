@@ -3,41 +3,49 @@
 import { useState } from "react"
 import styles from "@/styles/auth/login.module.css"
 import { supabase } from "@/lib/supabase"
-import { useRouter } from "next/navigation"
 
 interface SignInProps {
   onOpenReset: () => void;  
+  onSuccess: (data: { nome: string; avatar_url: string }) => void;
 }
 
-export default function LoginForm({ onOpenReset}: SignInProps) {
-  const router = useRouter()
+export default function LoginForm({ onOpenReset, onSuccess }: SignInProps) {
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   async function login(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setErrorMsg(null)
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: senha
-    })
+    });
 
     if (error) {
       if (error.message === "Invalid login credentials") { 
-        setErrorMsg("E-mail ou senha incorretos.")
+        setErrorMsg("E-mail ou senha incorretos.");
       } else {
-        setErrorMsg("Ocorreu um erro ao entrar. Tente novamente.")
+        setErrorMsg("Ocorreu um erro ao entrar. Tente novamente.");
       }
-      setLoading(false)
-      return
+      setLoading(false);
+      return;
     }
-    
-    router.push("/salas")
-    setLoading(false)
+
+    if (data?.user) {
+      const userData = {
+        
+        nome: data.user.user_metadata?.nome || "Usuário",
+        avatar_url: data.user.user_metadata?.avatar_url || "/Avatar_default.png"
+      };
+
+      onSuccess(userData); 
+    }
+
+    setLoading(false);
   }
 
   return (

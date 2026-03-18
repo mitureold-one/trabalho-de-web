@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
-import styles from "@/styles/welcome.module.css";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import styles from "@/styles/modal/welcome.module.css";
 
 interface Props {
   isOpen: boolean;
@@ -8,6 +9,19 @@ interface Props {
 }
 
 export default function WelcomeModal({ isOpen, userData }: Props) {
+  if (!isOpen) return null;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        router.push("/salas");
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, router]);
+
   if (!isOpen) return null;
 
   return (
