@@ -1,63 +1,118 @@
 .card {
   position: relative;
   min-width: 280px;
-  height: 180px;
+  height: 200px; /* Aumentei levemente para caber as novas linhas sem apertar */
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 24px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
   user-select: none;
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.05);
+  transform: translateY(-8px) scale(1.02);
   background: rgba(255, 255, 255, 0.08);
   border-color: #818cf8;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 
-              0 0 15px rgba(129, 140, 248, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+              0 0 20px rgba(129, 140, 248, 0.2);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  z-index: 2;
 }
 
 .roomName {
   font-size: 1.4rem;
   font-weight: 700;
   color: #fff;
-  margin: 0;
+  margin: 0 0 12px 0;
   letter-spacing: -0.02em;
 }
 
+/* Grupo de Informações (Criador e Data) */
 .infoGroup {
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: auto;
 }
 
-.creator {
-  font-size: 0.9rem;
-  color: #cbd5e1;
-  margin: 0;
+.creatorInfo, .dateLabel {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #94a3b8; /* Cor suave para o rótulo "Criada por:" */
+}
+
+.creatorInfo p span, .dateLabel span {
+  color: #f1f5f9; /* Cor clara para o dado real */
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.miniAvatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+  border: 1.5px solid rgba(129, 140, 248, 0.5);
+}
+
+.userIcon {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+/* Badge de Membros (no topo) */
+.memberBadge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e2e8f0;
   display: flex;
   align-items: center;
   gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.date {
-  font-size: 0.75rem;
-  color: #64748b;
-  margin: 4px 0 0 0;
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #4ade80;
 }
 
-.badge {
-  align-self: flex-start;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 15px;
+/* Rodapé (Privacidade e Tema) */
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.statusBadge {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .public {
@@ -72,22 +127,32 @@
   border: 1px solid rgba(249, 115, 22, 0.2);
 }
 
-/* Efeito de brilho que passa pelo card no hover */
+.topicBadge {
+  font-size: 0.75rem;
+  color: #818cf8;
+  font-weight: 600;
+  background: rgba(129, 140, 248, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Efeito de brilho no hover */
 .glare {
   position: absolute;
   top: 0;
-  left: -100%;
+  left: -150%;
   width: 100%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
-  transition: 0.5s;
+  transition: 0.6s;
+  z-index: 1;
 }
 
 .card:hover .glare {
-  left: 100%;
+  left: 150%;
 }

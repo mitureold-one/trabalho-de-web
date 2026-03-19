@@ -7,15 +7,15 @@ import { createRoom } from "@/lib/rooms";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  loadRooms: () => Promise<void>;
+  onSuccess: (newRoom: any) => void; 
 }
 
-export default function CreateRoomModal({ isOpen, onClose, loadRooms }: Props) {
+export default function CreateRoomModal({ isOpen, onClose, onSuccess }: Props) {
   const [roomName, setRoomName] = useState("");
   const [isPrivate, setPrivate] = useState(false);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false); // Novo estado de sucesso
+  const [success, setSuccess] = useState(false); 
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -31,19 +31,21 @@ export default function CreateRoomModal({ isOpen, onClose, loadRooms }: Props) {
     setLoading(true);
 
     try {
-      await createRoom(roomName, isPrivate, isPrivate ? password : null);
+      // O createRoom deve retornar os dados da sala criada
+      const newRoom = await createRoom(roomName, isPrivate, isPrivate ? password : null);
       
-      setSuccess(true); // Ativa o feedback visual de sucesso
+      setSuccess(true); 
 
-      // Espera 1.2s para o usuário ver que deu certo antes de fechar
-      setTimeout(async () => {
+      setTimeout(() => {
         setRoomName("");
         setPrivate(false);
         setPassword("");
         setSuccess(false);
-        if (loadRooms) await loadRooms();
+        
+        // Chama o callback passando os dados da nova sala
+        if (onSuccess) onSuccess(newRoom); 
         onClose();
-      }, 1200);
+      }, 1500); // Reduzi para 1.5s para não parecer travado
 
     } catch (err: any) {
       setError(err.message || "Ops! Algo deu errado no servidor. 🛠️");

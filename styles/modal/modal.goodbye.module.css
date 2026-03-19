@@ -1,0 +1,97 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #1a1931 0%, #0f0e1d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 11000;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.content {
+  text-align: center;
+  max-width: 350px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.waveEmoji {
+  font-size: 4rem;
+  animation: wave 1.5s infinite;
+  display: inline-block;
+}
+
+.title {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Timer Circular Minimalista */
+.timerCircle {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.number {
+  color: var(--cor-secundaria);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.svg {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  transform: rotate(-90deg);
+}
+
+.svg circle {
+  fill: none;
+  stroke: var(--cor-secundaria);
+  stroke-width: 3;
+  stroke-dasharray: 238;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: timerAnim 3s linear forwards;
+}
+
+.footerText {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* ANIMAÇÕES */
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+}
+
+@keyframes timerAnim {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: 238; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(10px); }
+}

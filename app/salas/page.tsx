@@ -1,82 +1,94 @@
 "use client";
 
-import styles from "@/styles/home.module.css";
-import { useEffect, useState } from "react"; 
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import RoomList from "@/components/sala/RoomList";
-import { getRooms } from "@/lib/rooms"; 
-import CreateRoomModal from "@/components/sala/CreateRoomModal";
+import CreateRoomModal from "@/components/sala/CreateRoomModal"; // Verifique se o caminho está correto
+import styles from "@/styles/home.module.css";
+import { getRooms } from "@/lib/rooms";
 
-export default function HomePage() {
-  const [rooms, setRooms] = useState<any[]>([]); 
+export default function SalasPage() {
+  const [allRooms, setAllRooms] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const handleRoomCreated = (newRoom: any) => {
+  // Adiciona a nova sala no início do array existente
+  setAllRooms((prev) => [newRoom, ...prev]);
+};
+  
+  // Adicionando o estado que estava faltando:
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Filtragem em tempo real
-  const filteredRooms = rooms.filter(room => 
-    room.nome?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  async function loadRooms() {
+  useEffect(() => {
+  async function fetchRooms() {
+    setLoading(true);
     try {
+      // USANDO A LIB AQUI:
       const data = await getRooms();
-      setRooms(data || []);
+      if (data) {
+        setAllRooms(data);
+      }
     } catch (error) {
       console.error("Erro ao carregar salas:", error);
+    } finally {
+      setLoading(false);
     }
   }
-
-  useEffect(() => {
-    loadRooms();
-  }, []);
+  fetchRooms();
+}, []);
 
   return (
-    <div className={styles.container}>
-      <header className={styles.pageHeader}>
+    <main className={styles.container}>
+      <header className={styles.header}>
         <div className={styles.titleArea}>
-          <h1>Salas Disponíveis</h1>
-          <p>Encontre sua galera ou crie um novo espaço</p>
+          <h1>Explorar Salas</h1>
+          {!loading && <p><strong>{allRooms.length}</strong> salas disponíveis para você</p>}
         </div>
-        
-        <div className={styles.headerActions}> 
-          <div className={styles.searchBar}>
-            <input 
+
+        <div className={styles.actions}>
+          <div className={styles.searchWrapper}>
+            <span className={styles.searchIcon} aria-hidden="true">🔍</span>
+            <input
               type="text"
-              placeholder="🔎 Buscar sala pelo nome..." 
+              placeholder="Buscar salas ou temas..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
             />
           </div>
           
           <button 
-            className={styles.createBtn} 
+            className={styles.createButton}
             onClick={() => setIsModalOpen(true)}
+            title="Criar nova sala"
           >
-            <span>+</span> Nova Sala
+            <span>+</span> Criar Sala
           </button>
-
-          <CreateRoomModal 
-            isOpen={isModalOpen} 
-            onClose={() => setIsModalOpen(false)} 
-            loadRooms={loadRooms} 
-          />
-
         </div>
-
       </header>
 
-      <main className={styles.roomGrid}>
-        {filteredRooms.length > 0 ? (
-          <RoomList rooms={filteredRooms} />
-        ) : (
-          <div className={styles.emptyState}>
-            <p>
-              {searchTerm 
-                ? `Nenhuma sala encontrada para "${searchTerm}"` 
-                : "Ainda não há salas criadas. Seja o primeiro!"}
-            </p>
+      <hr className={styles.divider} />
+
+      <section className={styles.content}>
+        {loading ? (
+          <div className={styles.loader}>
+            <div className={styles.spinner}></div>
+            <p>Carregando salas...</p>
           </div>
+        ) : (
+          <RoomList rooms={allRooms} searchTerm={searchTerm} />
         )}
-      </main>
-    </div>
+      </section>
+
+      {/* Renderização Condicional do Modal */}
+      {isModalOpen && (
+        <CreateRoomModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)} 
+          onSuccess={handleRoomCreated} 
+        />
+      )}
+    </main>
   );
 }

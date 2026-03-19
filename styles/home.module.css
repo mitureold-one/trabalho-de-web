@@ -1,228 +1,160 @@
+/* Container Principal */
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-.pageHeader {
-    display: flex;
-    justify-content: space-between;
+/* Header e Título */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
     align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 20px;
+    justify-content: space-between;
+  }
 }
 
 .titleArea h1 {
-    font-size: 2rem;
-    color: var(--cor-terciaria);
-    margin: 0;
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .titleArea p {
-    color: #666;
-    margin: 5px 0 0 0;
+  color: #666;
+  font-size: 1rem;
 }
 
-.searchBar {
-    flex: 1;
-    max-width: 400px;
-    min-width: 250px;
+/* Barra de Busca */
+.searchWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
 }
 
-.searchBar input {
-    width: 100%;
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(0,0,0,0.1);
-    background: white;
-    outline: none;
-    transition: border-color 0.3s;
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-.searchBar input:focus {
-    border-color: var(--cor-secundaria);
+.searchInput {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  outline: none;
 }
 
-/* Card de Criação de Sala */
-.createCard {
-    background: var(--cor-quintenaria);
-    padding: 20px;
-    border-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    border: 1px solid rgba(0,0,0,0.05);
+.searchInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-.createCard input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    font-size: 1rem;
-    outline: none;
-    padding: 10px;
-    border-bottom: 2px solid rgba(0,0,0,0.05);
+.searchInput::placeholder {
+  color: #94a3b8;
 }
 
-.createActions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+/* Divisor Sutil */
+.divider {
+  border: 0;
+  border-top: 1px solid #edf2f7;
+  margin-bottom: 2.5rem;
 }
 
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
+/* Área de Conteúdo / Grid */
+.content {
+  width: 100%;
 }
 
-.createCard button {
-    background-color: var(--cor-terciaria);
-    color: white;
-    padding: 12px 25px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.createCard button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-}
-
-.createCard button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.roomGrid {
-    padding-bottom: 50px;
-}
-
-.emptyState {
-    text-align: center;
-    padding: 100px 0;
-    color: #999;
-}
-
-@media (max-width: 768px) {
-    .createCard {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .pageHeader {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-.pageHeader {
+/* Estado de Loading */
+.loader {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-  gap: 20px;
+  justify-content: center;
+  padding: 4rem 0;
+  color: #64748b;
+  gap: 1rem;
 }
 
-.createBtn {
-  background: var(--cor-secundaria, #7000ff); /* Use sua cor principal */
+/* Spinner Animado */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* Container para alinhar Busca + Botão */
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .actions {
+    width: auto;
+  }
+}
+
+/* Estilo do Botão Criar Sala */
+.createButton {
+  background-color: #3b82f6;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 14px;
-  font-weight: 700;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
-.createBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(112, 0, 255, 0.4);
-  filter: brightness(1.1);
+.createButton:hover {
+  background-color: #2563eb;
 }
 
-.createBtn:active {
-  transform: translateY(0);
+.createButton:active {
+  transform: scale(0.98);
 }
 
-.headerActions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-    width: 100%;
+.createButton span {
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
-.searchBar {
-    flex: 1; /* Faz a barra de busca ocupar o espaço restante */
-    position: relative;
-}
-
-.searchBar input {
-    width: 100%;
-    padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #fff;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-.searchBar input:focus {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--cor-secundaria);
-    box-shadow: 0 0 15px rgba(245, 9, 17, 0.2);
-}
-
-.createBtn {
-    background: var(--cor-secundaria);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-}
-
-.createBtn:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-    box-shadow: 0 5px 15px rgba(245, 9, 17, 0.3);
-}
-
-/* --- ADAPTAÇÃO MOBILE --- */
-@media (max-width: 768px) {
-    .headerActions {
-        flex-direction: column; /* Empilha busca e botão no celular */
-        gap: 12px;
-    }
-
-    .searchBar {
-        width: 100%;
-    }
-
-    .createBtn {
-        width: 100%; /* Botão largo para facilitar o clique no celular */
-        justify-content: center;
-        padding: 15px;
-    }
+/* Ajuste no searchWrapper para não ocupar tudo se o botão estiver ao lado */
+@media (min-width: 768px) {
+  .searchWrapper {
+    min-width: 300px;
+  }
 }

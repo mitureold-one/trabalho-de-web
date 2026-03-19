@@ -67,6 +67,28 @@
     font-size: 1.1rem;
     /* Efeito de "pulsação" no texto de carregando */
     animation: pulse 1.5s ease-in-out infinite, fadeInUp 0.8s ease forwards;
+
+}
+
+.loaderBar {
+  width: 100%;
+  max-width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background: var(--cor-secundaria);
+  animation: loadingProgress 5s linear forwards;
+}
+
+@keyframes loadingProgress {
+  to { width: 100%; }
 }
 
 /* ANIMAÇÕES */

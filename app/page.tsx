@@ -14,10 +14,11 @@ export default function Home() {
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [userData, setUserData] = useState<{ nome: string; avatar_url: string } | null>(null);
 
-  const handleLoginSuccess = (data: { nome: string; avatar_url: string }) => {
-    setUserData(data);      
-    setIsWelcomeOpen(true); 
-  };
+ const handleLoginSuccess = (data: { nome: string; avatar_url: string }) => {
+  sessionStorage.setItem("welcome_active", "true");
+  setUserData(data);      
+  setIsWelcomeOpen(true); 
+};
 
   return (
     <div className={styles.page}>

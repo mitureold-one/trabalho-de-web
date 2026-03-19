@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import styles from "@/styles/ui/avatar.header.module.css";
-import { useRouter } from "next/navigation"
+import GoodbyeModal from "@/components/auth/goodbyModal"; 
 
 interface AvatarHeaderProps {
   isCollapsed?: boolean;
@@ -13,12 +13,26 @@ interface AvatarHeaderProps {
 export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
   const [profile, setProfile] = useState<{ nome: string; avatar_url: string } | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [showGoodbye, setShowGoodbye] = useState(false); 
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // Trava o botão
 
   const handleLogout = async () => {
-    await supabase.auth.signOut(); 
-    router.push("/");             
-    router.refresh();              
+    if (isLoggingOut) return; // Evita cliques duplos
+
+    setIsLoggingOut(true);
+    setShowGoodbye(true);
+
+    setTimeout(async () => {
+      try {
+        await supabase.auth.signOut();
+        // Substitui o histórico para matar o botão "Voltar"
+        window.location.replace("/"); 
+      } catch (error) {
+        console.error("Erro ao deslogar:", error);
+        setIsLoggingOut(false);
+        setShowGoodbye(false);
+      }
+    }, 3500); 
   };
 
   useEffect(() => {
@@ -48,44 +62,49 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
   if (loading) return <div className={styles.loadingSmall}>...</div>;
 
   return (
-    /* Adicionamos a classe 'collapsed' dinamicamente ao container */
-    <aside 
-      className={`${styles.userContainer} ${isCollapsed ? styles.collapsed : ""}`} 
-      aria-label="Perfil do usuário"
-    > 
-      
-      <Link href="/perfil" className={styles.profileLink}>
-        <div className={styles.avatarWrapper}>
-          {profile?.avatar_url ? (
-            <img 
-              src={profile.avatar_url} 
-              alt={`Foto de ${profile?.nome}`} 
-              className={styles.avatarImg} 
-            />
-          ) : (
-            <div className={styles.avatarDefault}>👤</div>
-          )}
-        </div>
-
-        {/* Só mostra o nome se NÃO estiver colapsado */}
-        {!isCollapsed && (
-          <div className={styles.userInfo}>
-            <strong className={styles.userName}>
-              {profile?.nome || "Usuário"}
-            </strong>
+    <>
+      <aside 
+        className={`${styles.userContainer} ${isCollapsed ? styles.collapsed : ""}`} 
+        aria-label="Perfil do usuário"
+      > 
+        <Link href="/perfil" className={styles.profileLink}>
+          <div className={styles.avatarWrapper}>
+            {profile?.avatar_url ? (
+              <img 
+                src={profile.avatar_url} 
+                alt={`Foto de ${profile?.nome}`} 
+                className={styles.avatarImg} 
+              />
+            ) : (
+              <div className={styles.avatarDefault}>👤</div>
+            )}
           </div>
-        )}
-      </Link>
 
-      <button 
-        type="button"
-        className={styles.logoutBtnRound} 
-        onClick={handleLogout} 
-        title="Sair da conta"
-      >
-        <img src="\poder.png" alt="botão de sair" />
-      </button>
+          {!isCollapsed && (
+            <div className={styles.userInfo}>
+              <strong className={styles.userName}>
+                {profile?.nome || "Usuário"}
+              </strong>
+            </div>
+          )}
+        </Link>
 
-    </aside>
+        <button 
+          type="button"
+          className={styles.logoutBtnRound} 
+          onClick={handleLogout} 
+          disabled={isLoggingOut} // Desabilita enquanto desloga
+          title="Sair da conta"
+          style={{ opacity: isLoggingOut ? 0.5 : 1, cursor: isLoggingOut ? 'not-allowed' : 'pointer' }}
+        >
+          <img src="/poder.png" alt="botão de sair" />
+        </button>
+      </aside>
+
+      <GoodbyeModal 
+        isOpen={showGoodbye} 
+        userName={profile?.nome || "Usuário"} 
+      />
+    </>
   );
 }

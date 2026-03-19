@@ -11,10 +11,10 @@ function handleSupabaseError(error: any): string {
 }
 
 export async function createRoom(roomName: string, isPrivate: boolean, password?: string | null) {
-  const { data: userData, error: userError } = await supabase.auth.getUser()
-  if (userError || !userData?.user) throw new Error("Usuário não autenticado")
+  const { data: userData } = await supabase.auth.getUser()
+  if (!userData?.user) throw new Error("Usuário não autenticado")
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("rooms")
     .insert({
       nome: roomName,
@@ -22,10 +22,16 @@ export async function createRoom(roomName: string, isPrivate: boolean, password?
       is_private: isPrivate,
       password: isPrivate ? password : null 
     })
+    .select(`
+      *,
+      creator:profiles!id_user (nome, avatar_url),
+      room_members (count)
+    `)
+    .single();
 
-  if (error) throw new Error(handleSupabaseError(error));
+  if (error) throw new Error(error.message);
+  return data;
 }
-
 // --- O GETROOMS VOLTOU ---
 export async function getRooms() {
   const { data, error } = await supabase
@@ -36,13 +42,20 @@ export async function getRooms() {
       created_at,
       is_private,
       id_user,
-      creator:profiles!rooms_id_user_fkey (
-        nome
+      creator:profiles!id_user (
+        nome,
+        avatar_url
+      ),
+      room_members!room_id (
+        count
       )
-    `) // Lembre-se: não selecionamos a 'password' por segurança
+    `) 
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(handleSupabaseError(error));
+  if (error) {
+    console.error("Erro Supabase:", error);
+    throw error;
+  }
   return data;
 }
 
@@ -76,3 +89,17 @@ export async function verifyAndJoin(roomId: string, password: string) {
 
   return true;
 }
+
+const { data, error } = await supabase
+  .from("rooms")
+  .select(`
+    *,
+    creator:profiles!rooms_id_user_fkey (
+      nome,
+      avatar_url
+    ),
+    room_members (
+      count
+    )
+  `)
+  .order("created_at", { ascending: false });

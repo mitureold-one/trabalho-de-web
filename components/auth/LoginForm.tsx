@@ -41,10 +41,14 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
         nome: data.user.user_metadata?.nome || "Usuário",
         avatar_url: data.user.user_metadata?.avatar_url || "/Avatar_default.png"
       };
-      onSuccess(userData); 
+
+      // Dá 500ms para o navegador "respirar" e gravar o cookie
+      setTimeout(() => {
+        onSuccess(userData); 
+      }, 500); 
     }
     setLoading(false);
-  }
+      }
 
   return (
     /* Removi styles.formContainer e styles.signIn daqui para não conflitar com o pai */

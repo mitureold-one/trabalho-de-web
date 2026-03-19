@@ -1,0 +1,91 @@
+/* Container Principal que envolve tudo */
+.listWrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* Esconde o que sai das bordas do carrossel */
+}
+
+/* O Carrossel que você já criou */
+.carrossel {
+  margin: auto;
+  width: 100%;
+  overflow-x: auto; 
+  scroll-behavior: smooth; 
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding: 40px 0;
+  display: flex; /* Garante alinhamento */
+}
+
+.carrossel::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Grupo de Cards dentro do Carrossel */
+.group {
+  display: flex;
+  gap: 24px;
+  padding: 0 50px;
+  width: max-content;
+  align-items: center;
+}
+
+/* --- MODO DE BUSCA (GRID) --- */
+/* Quando houver um searchTerm, aplicamos esta classe ao carrossel */
+.searchingMode {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  overflow-x: visible; /* Desativa o scroll horizontal */
+  justify-items: center;
+}
+
+/* No modo de busca, o .group não deve forçar o width: max-content */
+.searchingMode .group {
+  display: contents; /* Faz os cards se comportarem como filhos diretos do grid */
+}
+
+/* Estilo do Card (RoomCard) */
+.roomCard {
+  width: 280px; /* Largura fixa para manter o padrão no carrossel */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  border-radius: 16px; /* Ajuste conforme seu design */
+  background: #fff; /* Fundo base para o reflexo aparecer */
+}
+
+.roomCard:hover {
+  transform: scale(1.08) translateY(-5px); /* Sobe um pouquinho também */
+  z-index: 10;
+  filter: brightness(1.1);
+}
+
+.roomCard::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 10px 30px rgba(129, 140, 248, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.roomCard:hover::after {
+  opacity: 1;
+}
+
+/* Mensagem de "Nenhuma sala encontrada" */
+.emptyState {
+  text-align: center;
+  padding: 60px;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  width: 100%;
+}
