@@ -1,6 +1,6 @@
 "use client"
 
-import styles from "@/styles/roomcard.module.css"
+import styles from "@/styles/rooms/roomcard.module.css"
 import { useRouter } from "next/navigation"
 
 interface RoomCardProps {

@@ -157,3 +157,72 @@
 .createBtn:active {
   transform: translateY(0);
 }
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.searchBar {
+    flex: 1; /* Faz a barra de busca ocupar o espaço restante */
+    position: relative;
+}
+
+.searchBar input {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.searchBar input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 0 15px rgba(245, 9, 17, 0.2);
+}
+
+.createBtn {
+    background: var(--cor-secundaria);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.createBtn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 5px 15px rgba(245, 9, 17, 0.3);
+}
+
+/* --- ADAPTAÇÃO MOBILE --- */
+@media (max-width: 768px) {
+    .headerActions {
+        flex-direction: column; /* Empilha busca e botão no celular */
+        gap: 12px;
+    }
+
+    .searchBar {
+        width: 100%;
+    }
+
+    .createBtn {
+        width: 100%; /* Botão largo para facilitar o clique no celular */
+        justify-content: center;
+        padding: 15px;
+    }
+}

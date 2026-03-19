@@ -1,0 +1,307 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.modalContainer {
+  background: #121124;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.titleWrapper {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(245, 9, 17, 0.15));
+  border: 1px solid rgba(245, 9, 17, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 30px 30px 0;
+  text-align: center;
+}
+
+.cardTitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1.2;
+}
+
+.highlightText {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px rgba(245, 9, 17, 0.4);
+}
+
+.createCard {
+  padding: 30px;
+}
+
+.mainInput {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+}
+
+.mainInput:focus {
+  outline: none;
+  border-color: var(--cor-secundaria);
+  background: rgba(255, 255, 255, 0.08);
+}
+/* --- CHECKBOX CUSTOMIZADA --- */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none; /* Evita selecionar o texto ao clicar rápido */
+}
+
+.hiddenCheckbox {
+  display: none; /* Esconde o input padrão do navegador */
+}
+
+.customCheckbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Estado quando está marcado */
+.checked {
+  background: var(--cor-secundaria);
+  border-color: var(--cor-secundaria);
+  box-shadow: 0 0 15px rgba(245, 9, 17, 0.3);
+}
+
+/* O Ícone de Check (V) */
+.checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  animation: checkAnim 0.2s ease-out;
+}
+
+/* Texto do Label */
+.labelText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.checkboxLabel:hover .labelText {
+  color: #fff;
+}
+
+.checkboxLabel:hover .customCheckbox {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Animação do check aparecendo */
+@keyframes checkAnim {
+  from {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+/* --- TELA DE SUCESSO --- */
+.successState {
+    padding: 60px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    animation: fadeIn 0.4s ease;
+}
+
+.successIcon {
+    width: 70px;
+    height: 70px;
+    background: #2ecc71;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.successState h3 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.successState p {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* --- ESTILO DA CHECKBOX QUE FALTAVA --- */
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.hiddenCheckbox { display: none; }
+
+.customCheckbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.checked {
+    background: var(--cor-secundaria);
+    border-color: var(--cor-secundaria);
+}
+
+.checked::after {
+    content: '✔';
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.labelText {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* --- KEYFRAMES --- */
+@keyframes popIn {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- ANIMAÇÃO DO CAMPO DE SENHA --- */
+.passwordWrapper {
+  overflow: hidden;
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.createActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.submitBtn {
+  background: var(--cor-secundaria);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submitBtn:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+
+.submitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: #fff;
+}
+
+/* --- KEYFRAMES --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; transform: translateY(-10px); }
+  to { opacity: 1; max-height: 100px; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .overlay { align-items: flex-end; }
+  .modalContainer {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 24px 24px 0 0;
+    animation: mobileSlideUp 0.4s cubic-bezier(0, 0.55, 0.45, 1);
+  }
+}
+
+@keyframes mobileSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

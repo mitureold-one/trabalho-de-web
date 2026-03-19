@@ -18,7 +18,8 @@ export default function Header({ isCollapsed, setIsCollapsed }: any) {
         onClick={() => setIsCollapsed(!isCollapsed)}
         title={isCollapsed ? "Expandir" : "Recolher"}
       >
-        {isCollapsed ? "❯" : "❮"}
+        {isCollapsed ? <img src="\angulo-pequeno-direita.png" alt="botão de expadir o cabeçalho" /> 
+        : <img src="\angulo-pequeno-esquerdo.png" alt="botão de colapsar o cabeçalho" /> }
       </button>
 
       <div className={styles.logoWrapper}>

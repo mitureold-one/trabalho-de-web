@@ -7,9 +7,10 @@ import { supabase } from "@/lib/supabase"
 interface SignInProps {
   onOpenReset: () => void;  
   onSuccess: (data: { nome: string; avatar_url: string }) => void;
+  toggleMobile: () => void; 
 }
 
-export default function LoginForm({ onOpenReset, onSuccess }: SignInProps) {
+export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: SignInProps) {
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [loading, setLoading] = useState(false)
@@ -37,68 +38,71 @@ export default function LoginForm({ onOpenReset, onSuccess }: SignInProps) {
 
     if (data?.user) {
       const userData = {
-        
         nome: data.user.user_metadata?.nome || "Usuário",
         avatar_url: data.user.user_metadata?.avatar_url || "/Avatar_default.png"
       };
-
       onSuccess(userData); 
     }
-
     setLoading(false);
   }
 
   return (
-    <div className={`${styles.formContainer} ${styles.signIn}`}>
-        <form onSubmit={login} className={styles.form}>
-          <header>
-            <h1>Login</h1>
-          </header>
-      
-          <fieldset className={styles.inputFields}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+    /* Removi styles.formContainer e styles.signIn daqui para não conflitar com o pai */
+    <form onSubmit={login} className={styles.form}>
+      <header className={styles.header}>
+        <h1>Login</h1>
+      </header>
+    
+      <fieldset className={styles.inputFields}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-            <input
-              type="password"
-              placeholder="Senha"
-              value={senha} 
-              onChange={(e) => setSenha(e.target.value)}
-              required
-            />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={senha} 
+          onChange={(e) => setSenha(e.target.value)}
+          required
+        />
 
-            <p className={styles.forgotPassword}>
-              Esqueceu a senha?{" "}
-              <span 
-                className={styles.linkHighlight} 
-                onClick={onOpenReset} 
-              >
-                Recupere Aqui !
-              </span>
-            </p>
+        <p className={styles.forgotPassword}>
+          Esqueceu a senha?{" "}
+          <span 
+            className={styles.linkHighlight} 
+            onClick={onOpenReset} 
+          >
+            Recupere Aqui !
+          </span>
+        </p>
 
-            {errorMsg && (
-              <span className={styles.errorMessage}>
-                {errorMsg}
-              </span>
-            )}
-          </fieldset>
+        {errorMsg && (
+          <span className={styles.errorMessage}>
+            {errorMsg}
+          </span>
+        )}
+      </fieldset>
 
-          <footer>
-            <button 
-              type="submit"
-              disabled={loading}
-              className={styles.button}
-            >
-              {loading ? "Entrando..." : "Entrar"}
-            </button>
-          </footer>
-      </form>
-    </div>
+      <footer className={styles.footer}>
+        <button 
+          type="submit"
+          disabled={loading}
+          className={styles.button}
+        >
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
+
+        <p className={styles.mobileToggleLink}>
+          Não tem uma conta?{" "}
+          <span className={styles.linkHighlight} onClick={toggleMobile}>
+            Cadastre-se
+          </span>
+        </p>
+      </footer>
+    </form>
   )
 }

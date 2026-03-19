@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/sala.module.css";
+import styles from "@/styles/home.module.css";
 import { useEffect, useState } from "react"; 
 import RoomList from "@/components/sala/RoomList";
 import { getRooms } from "@/lib/rooms"; 
@@ -59,7 +59,9 @@ export default function HomePage() {
             onClose={() => setIsModalOpen(false)} 
             loadRooms={loadRooms} 
           />
+
         </div>
+
       </header>
 
       <main className={styles.roomGrid}>

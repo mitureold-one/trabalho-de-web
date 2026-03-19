@@ -18,7 +18,7 @@ export default function Home() {
     setUserData(data);      
     setIsWelcomeOpen(true); 
   };
-      
+
   return (
     <div className={styles.page}>
       
@@ -28,31 +28,46 @@ export default function Home() {
 
       <div className={`${styles.container} ${active ? styles.active : ""}`}>
 
-        <div className={`${styles.formContainer} ${styles.signUp}`}>
-          <SignupForm /> 
-        </div>
+        {/* A faixa de gradiente que você pediu! */}
+        <div className={styles.mobileGradientHeader}></div>
 
-        <div className={`${styles.formContainer} ${styles.signIn}`}>
-          <LoginForm 
-            onOpenReset={() => setIsResetOpen(true)} 
-            onSuccess={handleLoginSuccess} 
-          />
-        </div>
+          {/* SIGNUP CONTAINER */}
+          <div className={`
+            ${styles.formContainer} 
+            ${styles.signUp} 
+            ${active ? styles.visibleMobile : styles.hiddenMobile}
+          `}>
+            <SignupForm toggleMobile={() => setActive(false)} /> 
+          </div>
 
-        <div className={styles.toggleContainer}>
-          <TogglePanel
-            ativarLogin={() => setActive(false)}
-            ativarCadastro={() => setActive(true)}
-            active={active}
-          />
-        </div>
+          {/* SIGNIN CONTAINER */}
+          <div className={`
+            ${styles.formContainer} 
+            ${styles.signIn} 
+            ${active ? styles.hiddenMobile : styles.visibleMobile}
+          `}>
+            <LoginForm 
+              onOpenReset={() => setIsResetOpen(true)} 
+              onSuccess={handleLoginSuccess} 
+              toggleMobile={() => setActive(true)}
+            />
+          </div>
 
-        <ResetPasswordModal 
+          <div className={styles.toggleContainer}>
+            <TogglePanel
+              ativarLogin={() => setActive(false)}
+              ativarCadastro={() => setActive(true)}
+              active={active}
+            />
+          </div>
+
+        </div> 
+
+      <ResetPasswordModal 
           isOpen={isResetOpen} 
           onClose={() => setIsResetOpen(false)} 
-        />
+      />
 
-      </div>
     </div>
   )
 }

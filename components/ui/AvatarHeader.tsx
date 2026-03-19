@@ -6,7 +6,6 @@ import Link from "next/link";
 import styles from "@/styles/ui/avatar.header.module.css";
 import { useRouter } from "next/navigation"
 
-// Adicione a interface para a prop
 interface AvatarHeaderProps {
   isCollapsed?: boolean;
 }
@@ -84,7 +83,7 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
         onClick={handleLogout} 
         title="Sair da conta"
       >
-        ⏻
+        <img src="\poder.png" alt="botão de sair" />
       </button>
 
     </aside>

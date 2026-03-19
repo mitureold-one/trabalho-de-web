@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import styles from "@/styles/modal/welcome.module.css";
+import styles from "@/styles/modal/modal.welcome.module.css";
 
 interface Props {
   isOpen: boolean;

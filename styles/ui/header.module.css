@@ -1,101 +1,88 @@
-/* --- CONFIGURAÇÃO BASE (MOBILE-FIRST) --- */
+/* --- ESTILO BASE: DESKTOP (SIDEBAR) --- */
 .header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 70px;
+    width: 260px;
+    height: 100vh;
     background: rgba(11, 10, 29, 0.95);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 40px 15px;
     z-index: 1000;
     box-sizing: border-box;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- LOGO WRAPPER --- */
 .logoWrapper {
-    transition: all 0.3s ease;
     display: flex;
     justify-content: center;
-    width: 100%;
+    transition: all 0.3s ease;
 }
 
-/* --- ÁREA DE NAVEGAÇÃO --- */
 .nav {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-    flex: 1;
-    justify-content: flex-end;
+    flex-direction: column;
+    height: 100%;
+    margin-top: 40px;
 }
 
 .navList {
     display: flex;
+    flex-direction: column;
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 10px;
-}
-
-.navList li {
-    width: 100%;
+    gap: 12px;
 }
 
 .navList li a {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.6);
     font-weight: 700;
-    font-size: 0.85rem;
-    padding: 10px 15px;
+    font-size: 0.95rem;
+    padding: 12px 15px;
     border-radius: 12px;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: all 0.3s ease;
 }
 
-/* --- ESTILO DOS ÍCONES (TRATANDO IMAGENS GRANDES) --- */
+/* ÍCONES DO MENU */
 .navIcon {
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Redimensionando de 500px para o tamanho de ícone */
-    width: 24px; 
-    height: 24px;
     flex-shrink: 0;
-    overflow: hidden;
 }
 
 .navIcon img {
     width: 100%;
     height: 100%;
-    /* Mantém a qualidade da imagem ao reduzir */
-    object-fit: contain; 
-    image-rendering: -webkit-optimize-contrast; 
-    /* Efeito visual */
-    filter: brightness(0) invert(1) opacity(0.7); 
+    object-fit: contain;
+    filter: brightness(0) invert(1) opacity(0.7);
     transition: all 0.3s ease;
 }
 
+/* HOVER E ESTADO ATIVO */
 .navList li a:hover, .activeLink {
     color: #fff;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
 }
 
-.navList li a:hover img, .activeLink img {
+.activeLink img {
     filter: brightness(0) invert(1) opacity(1);
     transform: scale(1.1);
 }
 
-/* --- BOTÃO DE TOGGLE --- */
+/* BOTÃO DE TOGGLE (EXPANDIR/RECOLHER) */
 .toggleBtn {
     position: absolute;
     right: -14px;
@@ -104,83 +91,89 @@
     height: 28px;
     border-radius: 50%;
     background: var(--cor-secundaria);
-    color: white;
     border: 2px solid var(--cor-terciaria);
     cursor: pointer;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 1001;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    padding: 0;
     transition: all 0.2s ease;
 }
 
-/* --- ADAPTAÇÃO DESKTOP (SIDEBAR) --- */
-@media (min-width: 769px) {
+.toggleBtn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+.toggleBtn img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    pointer-events: none;
+}
+
+.userArea {
+    margin-top: auto;
+    padding-bottom: 20px;
+}
+
+/* --- ESTADO COLLAPSED (DESKTOP RECOLHIDO) --- */
+.collapsed {
+    width: 85px !important;
+    padding: 40px 0;
+}
+
+.collapsed .logoWrapper { transform: scale(0.65); }
+.collapsed .navList { align-items: center; }
+.collapsed .navList li a { justify-content: center; padding: 15px 0; gap: 0; }
+.collapsed .navText { display: none; }
+
+/* --- ADAPTAÇÃO MOBILE --- */
+@media (max-width: 768px) {
     .header {
-        width: 260px;
-        height: 100vh;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: stretch;
-        padding: 40px 15px;
+        width: 100% !important;
+        height: 70px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        top: 0;
     }
 
-    .toggleBtn { display: flex; }
+    .toggleBtn {
+        display: none !important;
+    }
+
+    .logoWrapper {
+        justify-content: flex-start;
+        width: auto;
+    }
 
     .nav {
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        height: 100%;
-        margin-top: 40px;
+        margin-top: 0;
+        height: auto;
     }
 
     .navList {
-        flex-direction: column;
-        width: 100%;
-        gap: 12px;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .navText {
+        display: none;
     }
 
     .navList li a {
-        width: 100%;
-        font-size: 0.95rem;
-        padding: 12px 15px;
+        padding: 8px;
     }
 
-    /* --- ESTADO COLLAPSED (CENTRALIZAÇÃO TOTAL) --- */
-    .collapsed {
-        width: 85px !important;
-        padding: 40px 0; /* Remove padding lateral para centralizar */
+    .userArea {
+        margin-top: 0;
+        padding-bottom: 0;
     }
-
-    .collapsed .logoWrapper {
-        transform: scale(0.6);
-    }
-
-    .collapsed .navList {
-        align-items: center; /* Centraliza as LI horizontalmente */
-    }
-
-    .collapsed .navList li a {
-        justify-content: center; /* Centraliza a imagem dentro do link */
-        padding: 15px 0;
-        gap: 0;
-    }
-
-    .collapsed .navIcon {
-        width: 28px; /* Ícone um pouco maior quando está sozinho */
-        height: 28px;
-    }
-
-    .collapsed .navText {
-        display: none;
-    }
-}
-
-/* --- MOBILE --- */
-@media (max-width: 768px) {
-    .navList { display: none; }
-    .header { height: 70px; }
 }
