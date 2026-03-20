@@ -1,91 +1,134 @@
-/* Container Principal que envolve tudo */
-.listWrapper {
-  position: relative;
+/* --- LAYOUT DESKTOP (PADRÃO) --- */
+.feedWrapper {
   width: 100%;
-  overflow: hidden; /* Esconde o que sai das bordas do carrossel */
-}
-
-/* O Carrossel que você já criou */
-.carrossel {
-  margin: auto;
-  width: 100%;
-  overflow-x: auto; 
-  scroll-behavior: smooth; 
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  padding: 40px 0;
-  display: flex; /* Garante alinhamento */
-}
-
-.carrossel::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
-
-/* Grupo de Cards dentro do Carrossel */
-.group {
   display: flex;
-  gap: 24px;
-  padding: 0 50px;
-  width: max-content;
+  flex-direction: column;
+  gap: 48px;
+  padding: 20px 0;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  color: #f1f5f9;
+  margin-bottom: 24px;
+  display: flex;
   align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-/* --- MODO DE BUSCA (GRID) --- */
-/* Quando houver um searchTerm, aplicamos esta classe ao carrossel */
-.searchingMode {
+/* Grids */
+.roomGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  overflow-x: visible; /* Desativa o scroll horizontal */
-  justify-items: center;
 }
 
-/* No modo de busca, o .group não deve forçar o width: max-content */
-.searchingMode .group {
-  display: contents; /* Faz os cards se comportarem como filhos diretos do grid */
+.popularGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
 }
 
-/* Estilo do Card (RoomCard) */
-.roomCard {
-  width: 280px; /* Largura fixa para manter o padrão no carrossel */
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: pointer;
+/* --- ANIMAÇÕES DE DESTAQUE (POPULARES) --- */
+.featuredAnimation {
   position: relative;
-  z-index: 1;
-  border-radius: 16px; /* Ajuste conforme seu design */
-  background: #fff; /* Fundo base para o reflexo aparecer */
+  animation: float 5s ease-in-out infinite;
 }
 
-.roomCard:hover {
-  transform: scale(1.08) translateY(-5px); /* Sobe um pouquinho também */
-  z-index: 10;
-  filter: brightness(1.1);
+.featuredAnimation::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 24px;
+  background: linear-gradient(45deg, #818cf8, #c084fc, #818cf8);
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0.35;
+  animation: rotateGradient 4s linear infinite;
 }
 
-.roomCard::after {
+/* --- EFEITO FIRE (ON FIRE AGORA) --- */
+.fireIcon {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  margin-right: 8px;
+}
+
+.fireIcon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+}
+
+/* O Espelhamento/Brilho do Fogo */
+.fireIcon::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 10px 30px rgba(129, 140, 248, 0.3);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  background-image: url('/simbolo-de-interface-quente-ou-queimada.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: blur(4px) brightness(1.5);
+  opacity: 0.6;
+  z-index: 1;
+  animation: firePulse 2s ease-out infinite;
 }
 
-.roomCard:hover::after {
-  opacity: 1;
+/* --- ADAPTAÇÃO PARA MOBILE (MEDIA QUERY) --- */
+@media (max-width: 768px) {
+  .feedWrapper {
+    gap: 30px;
+    padding: 10px;
+  }
+
+  .sectionTitle {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+
+  .roomGrid, .popularGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Suaviza animações no mobile para performance */
+  .featuredAnimation {
+    animation: none;
+    transform: none !important;
+  }
+  
+  .fireIcon::after {
+    animation: firePulse 3s ease-out infinite; /* Mais lento no mobile */
+    transform: scale(1.2); 
+  }
 }
 
-/* Mensagem de "Nenhuma sala encontrada" */
-.emptyState {
+/* --- KEYFRAMES --- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes rotateGradient {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes firePulse {
+  0% { transform: scale(1); opacity: 0.6; filter: blur(4px) brightness(1.5); }
+  50% { transform: scale(1.5); opacity: 0; filter: blur(8px) brightness(2); }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.emptyContainer {
   text-align: center;
-  padding: 60px;
-  color: #94a3b8;
+  padding: 100px 20px;
+  color: #64748b;
   font-size: 1.1rem;
-  width: 100%;
 }
