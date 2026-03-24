@@ -1,0 +1,119 @@
+.memberLink {
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    margin-bottom: 12px;
+}
+
+.memberItem {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    
+    /* Usando sua cor quaternária com transparência para o efeito Glass */
+    background: rgba(28, 28, 58, 0.4); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    /* Borda sutil usando a cor quinzenaria (branco) bem transparente */
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 16px;
+    
+    transition: all 0.3s var(--transition-padrao, cubic-bezier(0.4, 0, 0.2, 1));
+    cursor: pointer;
+}
+
+.memberItem:hover {
+    /* No hover, usamos a sua cor secundária (vermelho) de forma bem sutil no fundo */
+    background: rgba(var(--cor-secundaria-rgb), 0.15);
+    border-color: rgba(var(--cor-secundaria-rgb), 0.3);
+    transform: translateX(6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.avatarContainer {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.statusDot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    /* O "corte" da bolinha agora usa a cor de fundo oficial do seu app */
+    border: 2.5px solid var(--cor-terciaria); 
+}
+
+.online { 
+    background-color: #2ecc71; 
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+}
+
+.offline { 
+    background-color: #555; 
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cor-quintenaria);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.role {
+    display: flex;
+    align-items: center;
+}
+
+.adminBadge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* Usando o vermelho da sua marca para o Admin */
+    color: var(--cor-secundaria);
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.adminBadge img {
+    width: 12px;
+    height: 12px;
+    /* Se o ícone for escuro, o filter inverte para branco ou cor clara */
+    filter: brightness(0) invert(1);
+}
+
+.memberText {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+    .memberItem {
+        padding: 14px;
+        background: rgba(28, 28, 58, 0.6); /* Um pouco mais sólido no mobile */
+    }
+}

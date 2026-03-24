@@ -1,109 +1,108 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { supabase } from "@/lib/supabase"
-import ChatFooter from "./chatfooter"
-import styles from "@/styles/chat.module.css"
+import { useState, useEffect, useRef, useMemo } from "react"
+import { useChatMessages } from "@/hooks/useChatMessages" 
+import MessageInput from "@/components/chat/MessageInput" 
+import MessageItem  from "@/components/chat/MessageItem" 
+import MembersSidebar from "./MembersSidebar"
+import styles from "@/styles/chat/chatbox.module.css"
 
-// Definimos o que o componente espera receber
 interface ChatboxProps {
-  roomId: string
+  roomId: string;
+  currentUser: any; 
 }
 
-export default function Chatbox({ roomId }: ChatboxProps) {
+export default function Chatbox({ roomId, currentUser }: ChatboxProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState<any[]>([])
-  const [roomData, setRoomData] = useState<any>(null)
+  const [messageText, setMessageText] = useState("")
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false) 
+  const { messages, roomData, loading } = useChatMessages(roomId)
 
-  // 1. Carregar dados iniciais
+  // ✅ Agrupamento inteligente usando useMemo para performance
+  const groupedMessages = useMemo(() => {
+    return messages.reduce((groups: any, message) => {
+      const date = new Date(message.created_at).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+      if (!groups[date]) groups[date] = [];
+      groups[date].push(message);
+      return groups;
+    }, {});
+  }, [messages]);
+
   useEffect(() => {
-    async function getInitialData() {
-      if (!roomId) return
-
-      const { data: room } = await supabase
-        .from("rooms")
-        .select("*")
-        .eq("id_room", roomId)
-        .single()
-      if (room) setRoomData(room)
-
-      const { data: msgs } = await supabase
-        .from("mensagem")
-        .select("*")
-        .eq("room_id", roomId)
-        .order("created_at", { ascending: true })
-      
-      if (msgs) setMessages(msgs || [])
-    }
-
-    getInitialData()
-  }, [roomId])
-
-  // 2. Realtime (Ouvir novas mensagens)
-  useEffect(() => {
-    if (!roomId) return
-
-    const channel = supabase
-      .channel(`room-${roomId}`)
-      .on(
-        'postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'mensagem', filter: `room_id=eq.${roomId}` },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new])
-        }
-      )
-      .subscribe()
-
-    return () => { supabase.removeChannel(channel) }
-  }, [roomId])
-
-  // 3. Auto-scroll
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    const container = scrollRef.current
+    if (!container) return
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 200
+    if (isNearBottom || messages.length <= 50) {
+      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" })
     }
   }, [messages])
 
-  async function sendMessage(e: React.FormEvent) {
-    e.preventDefault()
-    if (!message.trim()) return
-
-    const { error } = await supabase
-      .from("mensagem")
-      .insert({ content: message, room_id: roomId })
-
-    if (!error) setMessage("")
-  }
-
   return (
-    <div className={styles.chatWrapper}>
-      <header className={styles.chatHeader}>
-        <h2>Sala: {roomData?.nome || "Carregando..."}</h2>
-      </header>
+    <main className={styles.pageContainer}>
+      <div 
+        className={`${styles.overlay} ${isSidebarOpen ? styles.overlayActive : ""}`} 
+        onClick={() => setIsSidebarOpen(false)} 
+        aria-hidden="true" 
+      />
 
-      <div className={styles.messagesArea} ref={scrollRef}>
-        {messages.map((msg, index) => (
-          <div key={msg.id || index} className={styles.messageRow}>
-            <div className={styles.bubble}>
-              <span className={styles.userLabel}>{msg.user_email || "Membro"}</span>
-              <p>{msg.content}</p>
+      <section className={styles.chatWrapper}>
+        <header className={styles.chatHeader}>
+          <div className={styles.roomInfo}>
+            <div className={styles.roomStatus}>
+              <span className={styles.onlineDot} aria-hidden="true"></span>
+              <h2>{roomData?.name || "Carregando sala..."}</h2>
             </div>
           </div>
-        ))}
+
+          <button 
+            className={`${styles.mobileMenuBtn} ${isSidebarOpen ? styles.menuOpen : ""}`} 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            aria-expanded={isSidebarOpen}
+          >
+            <img src="/lista.png" alt="Membros" className={styles.menuIcon} />
+          </button>
+        </header>
+
+        <div className={styles.messagesArea} ref={scrollRef} role="log" aria-live="polite">
+          {loading ? (
+            <div className={styles.loader}><p>Buscando histórico...</p></div>
+          ) : (
+            Object.keys(groupedMessages).map((date) => (
+              <div key={date} className={styles.dateGroup}>
+                {/* 📅 Divisor de Data */}
+                <div className={styles.dateDivider}>
+                  <span>{date}</span>
+                </div>
+
+                {groupedMessages[date].map((msg: any) => (
+                  <MessageItem 
+                    key={msg.id} 
+                    msg={msg} 
+                    isMine={msg.user_id === currentUser?.uid} 
+                  />
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+
+        <footer className={styles.chatFooter}>
+          <MessageInput
+            roomId={roomId}
+            currentUser={currentUser}
+            message={messageText}
+            setMessage={setMessageText}
+          />
+        </footer>
+      </section>
+
+      <div className={`${styles.sidebarWrapper} ${isSidebarOpen ? styles.active : ""}`}>
+         <MembersSidebar roomId={roomId} isOpen={isSidebarOpen} />
       </div>
-
-      <form onSubmit={sendMessage} className={styles.chatForm}>
-        <input
-          className={styles.chatInput}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Digite sua mensagem..."
-        />
-        <button type="submit" className={styles.sendButton}>Enviar</button>
-      </form>
-
-      <ChatFooter room={roomData}/>
-    </div>
+    </main>
   )
 }

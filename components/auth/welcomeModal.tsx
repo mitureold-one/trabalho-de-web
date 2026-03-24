@@ -1,49 +1,56 @@
 "use client";
-import { useEffect } from "react";
+import Image from "next/image";
 import styles from "@/styles/modal/modal.welcome.module.css";
+import { UserData } from "@/lib/auth";
+import {useEffect} from "react"
 
 interface Props {
   isOpen: boolean;
-  userData: { nome: string; avatar_url: string } | null;
+  userData: Partial<UserData> | null;
+  onClose: () => void;
 }
 
-export default function WelcomeModal({ isOpen, userData }: Props) {
-  // 1. Verificação de segurança: se não estiver aberto, não renderiza o HTML
+export default function WelcomeModal({ isOpen, userData, onClose }: Props) {
   if (!isOpen) return null;
 
- useEffect(() => {
-    // Só dispara se o modal estiver aberto
-    if (isOpen) {
-      const timer = setTimeout(() => {
-        // window.location.replace é o "segredo" profissional.
-        // Ele substitui a página "/" (login) pela "/salas" no histórico.
-        // Resultado: Se o usuário clicar em "Voltar", ele sai do site 
-        // em vez de voltar para o modal de boas-vindas.
-        window.location.replace("/salas"); 
-      }, 5000);
+  // Pegamos o primeiro nome para um toque mais humano
+  const firstName = userData?.name?.split(" ")[0] || "Viajante";
 
-      // Limpeza importante: se o componente sumir, o timer para.
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
+    useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose()
+    }, 4000) // aqui você controla o tempo REAL
+
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
+    
+    
     <div className={styles.overlay}>
-      <div className={styles.content}>
+      
+      <div className={styles.content}
+       onClick={(e) => e.stopPropagation()}>
         <div className={styles.avatarContainer}>
           <div className={styles.ring}></div>
-          <img 
-            src={userData?.avatar_url || "/default-avatar.png"} 
+          <Image 
+            src={userData?.avatar_url ? `${userData.avatar_url}?v=1` : "/Avatar_default.png"} 
             className={styles.avatar} 
-            alt="User" 
+            alt={`Foto de perfil de ${firstName}`}
+            width={120}
+            height={120}
+            priority
           />
         </div>
         
-        <h1 className={styles.title}>Bem-vindo, {userData?.nome?.split(' ')[0]}!</h1>
-        <p className={styles.subtitle}>Sincronizando as melhores salas...</p>
+        <h1 id="welcome-title" className={styles.title}>
+          Bem-vindo, {firstName}!
+        </h1>
+        <p className={styles.subtitle}>
+          Estamos preparando sua conexão com as salas...
+        </p>
         
-        {/* Feedback visual de progresso */}
-        <div className={styles.loaderBar}>
+        <div className={styles.loaderBar} aria-hidden="true">
            <div className={styles.progress}></div>
         </div>
       </div>

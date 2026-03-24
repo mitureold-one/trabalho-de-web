@@ -31,7 +31,6 @@ export default function CreateRoomModal({ isOpen, onClose, onSuccess }: Props) {
     setLoading(true);
 
     try {
-      // O createRoom deve retornar os dados da sala criada
       const newRoom = await createRoom(roomName, isPrivate, isPrivate ? password : null);
       
       setSuccess(true); 

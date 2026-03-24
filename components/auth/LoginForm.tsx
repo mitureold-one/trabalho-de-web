@@ -1,63 +1,65 @@
 "use client"
 
 import { useState } from "react"
+import { useAuth } from "@/AuthContext" // 1. Usando o Poder Central
 import styles from "@/styles/auth/login.module.css"
-import { supabase } from "@/lib/supabase"
 
 interface SignInProps {
   onOpenReset: () => void;  
-  onSuccess: (data: { nome: string; avatar_url: string }) => void;
+  onSuccess: () => void; // Removi o envio de dados, o contexto já os tem
   toggleMobile: () => void; 
 }
 
 export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: SignInProps) {
+  const { signIn } = useAuth() // Consumindo a central de verdade
+  
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  async function login(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    
+    // 2. Blindagem contra múltiplos submits
+    if (loading) return;
+
     setLoading(true);
     setErrorMsg(null);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: senha
-    });
+    try {
+      // 3. Higienização e Uso do Contexto
+      // O componente agora é agnóstico à implementação (Firebase/API)
+      await signIn(email.trim().toLowerCase(), senha);
+      
+      // Se chegou aqui, o AuthContext já atualizou o estado global 'user'
+      onSuccess(); 
+    } catch (error: unknown) {
+      console.error("Login Error:", error);
 
-    if (error) {
-      if (error.message === "Invalid login credentials") { 
-        setErrorMsg("E-mail ou senha incorretos.");
+      // 4. Tipagem Segura (Unknown -> Error)
+      if (error instanceof Error) {
+        const msg = error.message === "Invalid login credentials" 
+          ? "E-mail ou senha incorretos." 
+          : "Erro ao entrar. Tente novamente mais tarde.";
+        setErrorMsg(msg);
       } else {
-        setErrorMsg("Ocorreu um erro ao entrar. Tente novamente.");
+        setErrorMsg("Ocorreu um erro inesperado.");
       }
+    } finally {
+      // 5. Garantia de consistência da UI
       setLoading(false);
-      return;
     }
-
-    if (data?.user) {
-      const userData = {
-        nome: data.user.user_metadata?.nome || "Usuário",
-        avatar_url: data.user.user_metadata?.avatar_url || "/Avatar_default.png"
-      };
-
-      // Dá 500ms para o navegador "respirar" e gravar o cookie
-      setTimeout(() => {
-        onSuccess(userData); 
-      }, 500); 
-    }
-    setLoading(false);
-      }
+  }
 
   return (
-    /* Removi styles.formContainer e styles.signIn daqui para não conflitar com o pai */
-    <form onSubmit={login} className={styles.form}>
+    <form onSubmit={handleLogin} className={styles.form}>
       <header className={styles.header}>
         <h1>Login</h1>
       </header>
     
-      <fieldset className={styles.inputFields}>
+      {/* 6. Consistência: Fieldset desabilitado como no Signup */}
+      <fieldset className={styles.inputFields} disabled={loading}>
         <input
           type="email"
           placeholder="Email"
@@ -74,18 +76,21 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
           required
         />
 
-        <p className={styles.forgotPassword}>
+        <div className={styles.forgotPassword}>
           Esqueceu a senha?{" "}
-          <span 
-            className={styles.linkHighlight} 
-            onClick={onOpenReset} 
+          {/* 7. Acessibilidade: Botão em vez de span */}
+          <button 
+            type="button"
+            className={styles.linkButton} 
+            onClick={onOpenReset}
+            disabled={loading}
           >
             Recupere Aqui !
-          </span>
-        </p>
+          </button>
+        </div>
 
         {errorMsg && (
-          <span className={styles.errorMessage}>
+          <span className={styles.errorMessage} role="alert">
             {errorMsg}
           </span>
         )}
@@ -94,18 +99,24 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
       <footer className={styles.footer}>
         <button 
           type="submit"
-          disabled={loading}
+          disabled={loading || !email || !senha}
           className={styles.button}
         >
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? "Verificando..." : "Entrar"}
         </button>
 
-        <p className={styles.mobileToggleLink}>
-          Não tem uma conta?{" "}
-          <span className={styles.linkHighlight} onClick={toggleMobile}>
-            Cadastre-se
-          </span>
-        </p>
+        {!loading && (
+          <p className={styles.mobileToggleLink}>
+            Não tem uma conta?{" "}
+            <button 
+              type="button"
+              className={styles.linkButton} 
+              onClick={toggleMobile}
+            >
+              Cadastre-se
+            </button>
+          </p>
+        )}
       </footer>
     </form>
   )

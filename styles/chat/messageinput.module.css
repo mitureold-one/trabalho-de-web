@@ -1,0 +1,92 @@
+.chatForm {
+    width: 100%;
+    padding: 5px 0;
+}
+
+/* Container que simula o input pílula */
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03); /* Efeito Glass sutil */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50px; /* Formato Pílula */
+    padding: 6px 6px 6px 18px;
+    transition: all 0.3s ease;
+}
+
+.inputWrapper:focus-within {
+    border-color: var(--cor-secundaria); /* Sua cor de destaque (vermelho) */
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 15px rgba(var(--cor-secundaria-rgb), 0.1);
+}
+
+.chatInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cor-quintenaria);
+    font-size: 0.95rem;
+    height: 40px;
+}
+
+.chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.sendButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cor-secundaria); /* Vermelho do sistema */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.sendButton:hover:not(:disabled) {
+    transform: scale(1.1) rotate(-10deg);
+    filter: brightness(1.2);
+}
+
+.sendButton:disabled {
+    background: var(--cor-quaternaria);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.sendIcon {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1); /* Deixa o ícone branco */
+}
+
+/* Spinner Simples */
+.spinnerSmall {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Utility para esconder texto de leitores de tela */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}

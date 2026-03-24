@@ -1,0 +1,43 @@
+/* CONTAINER DA PÁGINA INTEIRA */
+.chatPageWrapper {
+    width: 100%;
+    height: calc(100vh - 70px); /* Ajustado para o seu Header Mobile de 70px */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evita scroll duplo na página */
+    background-color: var(--cor-terciaria);
+}
+
+/* LOADING STATE */
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 20px;
+    background-color: var(--cor-terciaria);
+    color: var(--cor-quintenaria);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--cor-secundaria);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* REGRAS PARA DESKTOP */
+@media (min-width: 769px) {
+    .chatPageWrapper {
+        height: 100vh; /* No PC o Header costuma ser lateral ou diferente */
+        /* Se você quiser que o chat flutue com margens como combinamos antes: */
+        padding: 0; 
+    }
+}

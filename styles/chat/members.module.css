@@ -1,0 +1,73 @@
+.sidebar {
+  width: 280px;
+  height: calc(100vh - 40px); /* Descontando margens se houver */
+  background-color: var(--cor-terciaria);
+  display: flex;
+  flex-direction: column;
+  
+  /* 🟢 Separação do Chatbook: Margem à esquerda no Desktop */
+  margin-left: 20px; 
+  border-radius: 20px; /* Cantos arredondados na sidebar toda */
+  padding: 20px;
+  border: 1px solid var(--cor-quaternaria);
+  
+  position: sticky;
+  top: 20px;
+}
+
+/* Container do Título */
+.headerSection {
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Linha divisória fina */
+}
+
+.titleBadge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cor-quintenaria);
+  opacity: 0.5;
+}
+
+.countBadge {
+  background: var(--cor-quaternaria);
+  color: var(--cor-secundaria); /* Seu vermelho */
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Container da Lista */
+.listSection {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px; /* Espaço para a scrollbar não colar no card */
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Espaço entre os cards */
+}
+
+/* Ajuste Mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    margin-left: 0;
+    height: 100vh;
+    border-radius: 0;
+    position: fixed;
+    right: -300px;
+    top: 0;
+    z-index: 1000;
+  }
+}

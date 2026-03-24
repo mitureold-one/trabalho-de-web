@@ -1,0 +1,79 @@
+.messageRow {
+    display: flex;
+    width: 100%;
+    margin-bottom: 4px;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.myMessage {
+    flex-direction: row-reverse; /* Alinha suas mensagens à direita */
+}
+
+.theirMessage {
+    flex-direction: row; /* Mensagens dos outros à esquerda */
+}
+
+.miniAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* BOLHA BASE */
+.bubble {
+    max-width: 70%;
+    padding: 10px 14px;
+    position: relative;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 🔵 MENSAGEM DOS OUTROS */
+.theirBubble {
+    background: var(--cor-quaternaria);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--cor-quintenaria);
+    border-radius: 18px 18px 18px 4px; /* Canto inferior esquerdo "pontudo" */
+}
+
+/* 🔴 MINHA MENSAGEM */
+.myBubble {
+    background: rgba(var(--cor-secundaria-rgb), 0.2); /* Seu vermelho com transparência */
+    border: 1px solid rgba(var(--cor-secundaria-rgb), 0.3);
+    color: var(--cor-quintenaria);
+    border-radius: 18px 18px 4px 18px; /* Canto inferior direito "pontudo" */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.userLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--cor-secundaria); /* Nome do usuário em destaque */
+    margin-bottom: 4px;
+}
+
+.content {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.timeTag {
+    font-size: 0.65rem;
+    opacity: 0.5;
+    align-self: flex-end;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* Mobile: Ajusta largura da bolha */
+@media (max-width: 768px) {
+    .bubble {
+        max-width: 85%;
+    }
+}
