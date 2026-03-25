@@ -18,7 +18,6 @@ export default function Home() {
   const [isResetOpen, setIsResetOpen] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
 
-  // ✅ Todos os hooks ANTES de qualquer return condicional
   const handleLoginSuccess = useCallback(() => {
     setShowWelcome(true)
   }, [])
@@ -32,12 +31,13 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    if (!showWelcome && user) {
-      router.replace("/rooms")
-    }
-  }, [showWelcome, user, router])
+  console.log("🔍 useEffect:", { loading, showWelcome, user: !!user })
+  if (!loading && !showWelcome && user) {
+    console.log("➡️ Redirecionando para /rooms")
+    router.replace("/rooms")
+  }
+}, [showWelcome, user, loading, router])
 
-  // ✅ Return condicional só depois de todos os hooks
   if (loading) {
     return <div className={styles.loadingFullPage}>Carregando...</div>
   }
