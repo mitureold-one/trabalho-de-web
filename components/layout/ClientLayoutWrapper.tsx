@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image"; // Não esqueça do import do Image
+import Image from "next/image"; 
 import Header from "@/components/UI/Header/header";
 import Footer from "@/components/UI/Footer/footer";
 import { AuthProvider } from "@/AuthContext"; 
@@ -18,41 +18,36 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
   return (
     <AuthProvider>
-      <div className={`app-layout ${isCollapsed ? "sidebar-collapsed" : ""}`}>
+      {/* Centralizamos a classe de layout aqui usando o styles do CSS Module */}
+      <div className={`${styles.appLayout} ${isCollapsed ? styles.sidebarCollapsed : ""}`}>
         <Header 
           isCollapsed={isCollapsed} 
           setIsCollapsed={setIsCollapsed} 
           setIsThemeOpen={setIsThemeOpen} 
         />      
         
-        <div className="main-container">
-          <main className="main-content">
+        <div className={styles.mainContainer}>
+          <main className={styles.mainContent}>
             {children}
 
-            {/* 1. BOTÃO FLUTUANTE (Aparece só quando o modal está FECHADO) */}
+            {/* BOTÃO FLUTUANTE */}
             {!isThemeOpen && (
               <button 
                 className={styles.floatingThemeBtn} 
                 onClick={() => setIsThemeOpen(true)}
-                aria-label="Personalizar Cores"
               >
-                <Image src="/definicoes.png" alt="" width={24} height={24} />
+                <Image src="/definicoes.png" alt="Config" width={24} height={24} />
               </button>
             )}
 
-            {/* 2. MODAL (Aparece só quando o estado for TRUE) */}
+            {/* MODAL DE PERSONALIZAÇÃO */}
             {isThemeOpen && (
               <div className={styles.themeOverlay} onClick={() => setIsThemeOpen(false)}>
                 <div className={styles.themeModal} onClick={(e) => e.stopPropagation()}>
                   <div className={styles.modalHeader}>
                     <span>Personalizar Aparência</span>
-                    <button 
-                      type="button"
-                      onClick={() => setIsThemeOpen(false)} 
-                      className={styles.closeBtn}
-                    >✕</button>
+                    <button onClick={() => setIsThemeOpen(false)} className={styles.closeBtn}>✕</button>
                   </div>
-                  
                   <div className={styles.modalBody}>
                     <ColorController />
                   </div>

@@ -1,3 +1,4 @@
+/* --- CONTAINER QUE DESLIZA (50% da largura) --- */
 .toggleContainer {
   position: absolute;
   top: 0;
@@ -7,22 +8,27 @@
   overflow: hidden;
   transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
   z-index: 1000;
-  /* Reduzi um pouco a curva, 150px é gigante e espreme o texto */
-  border-radius: 100px 0 0 80px; 
+  /* Curva interna para design premium */
+  border-radius: 150px 0 0 100px;
 }
 
+/* Quando o pai está .active, o container do toggle pula para a esquerda */
 .active.toggleContainer {
   transform: translateX(-100%);
-  border-radius: 0 100px 80px 0;
+  border-radius: 0 150px 100px 0;
 }
 
+/* --- O FUNDO GRADIENTE (Ocupa 200% para compensar o movimento) --- */
 .toggle {
   background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
-  color: var(--cor-quintenaria);
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
   position: relative;
   left: -100%;
   height: 100%;
   width: 200%;
+  transform: translateX(0);
   transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
@@ -30,120 +36,92 @@
   transform: translateX(50%);
 }
 
+/* --- PAINÉIS INTERNOS (Esquerda e Direita) --- */
 .togglePanel {
   position: absolute;
-  width: 50%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  /* MUDANÇA AQUI: de 60px para 30px para ganhar espaço horizontal */
-  padding: 0 30px; 
+  padding: 0 40px;
   text-align: center;
   top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
   transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-.togglePanel h1 {
-  /* Título muito grande (2.5rem) em 384px de largura sempre vai parecer apertado */
-  font-size: 2rem; 
-  margin-bottom: 10px;
-  /* Se o título for "Chat da Galera!", o white-space: nowrap vai fazer ele vazar */
-  white-space: normal; 
-}
-
-.togglePanel p {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 20px;
-  max-width: 280px; /* Mantém o parágrafo compacto e elegante */
-}
-
-/* Lógica de exibição que já está funcionando */
 .toggleLeft {
-  left: 0;
-  transform: translateX(-200%);
-  opacity: 0;
+  transform: translateX(-20%);
 }
 
 .active .toggleLeft {
   transform: translateX(0);
-  opacity: 1;
 }
 
 .toggleRight {
   right: 0;
   transform: translateX(0);
-  opacity: 1;
 }
 
 .active .toggleRight {
-  transform: translateX(200%);
-  opacity: 0;
+  transform: translateX(20%);
 }
 
-/* Estilo para o botão dentro do painel de toggle */
-.togglePanel button {
-  background-color: transparent; /* Fundo transparente */
-  border: 1px solid var(--cor-quintenaria); /* Borda branca */
-  color: var(--cor-quintenaria); /* Texto branco */
-  font-size: 12px;
-  padding: 10px 45px;
-  border-radius: 8px;
+/* --- TIPOGRAFIA --- */
+.togglePanel h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.togglePanel h2 {
+  font-size: 1.4rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.togglePanel p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+/* --- BOTÃO GHOST (Vazado) --- */
+.buttonGhost {
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 45px;
+  border-radius: 12px;
   text-transform: uppercase;
-  margin-top: 10px;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.3s ease; /* Transição suave para o hover */
-  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Efeito ao passar o mouse */
-.togglePanel button:hover {
-  background-color: var(--cor-quintenaria); /* Enche de branco */
-  color: var(--cor-primaria); /* Texto fica com a cor do seu fundo (azul/vermelho) */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Leve sombra para dar profundidade */
-  transform: translateY(-2px); /* Sobe um pouquinho */
+.buttonGhost:hover {
+  background-color: #ffffff;
+  color: var(--cor-secundaria);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
-/* Efeito ao clicar */
-.togglePanel button:active {
-  transform: scale(0.95); /* Dá um efeito de "aperto" no botão */
+.buttonGhost:active {
+  transform: scale(0.95);
 }
 
+/* --- REGRAS PARA O MOBILE --- */
 @media (max-width: 768px) {
-  /* 1. Escondemos o painel de toggle lateral no mobile */
-  /* Ele ocupa muito espaço e a animação lateral causa scroll horizontal indesejado */
   .toggleContainer {
-    display: none; 
-  }
-
-  /* 2. Como o toggle sumiu, precisamos garantir que o formulário ocupe 100% */
-  /* Ajuste isso no seu arquivo de container pai se necessário */
-  .formContainer {
-    width: 100% !important;
-    left: 0 !important;
-    transform: none !important;
-  }
-
-  /* 3. Ajuste para o formulário de SignUp aparecer por cima do SignIn sem o deslize lateral */
-  .container.active .signIn {
-    opacity: 0;
-    z-index: 1;
-    transform: none;
-  }
-
-  .container.active .signUp {
-    opacity: 1;
-    z-index: 5;
-    transform: none;
-    animation: fadeInMobile 0.4s ease-in-out;
+    display: none !important; /* Esconde no mobile conforme seu TSX */
   }
 }
 
-@keyframes fadeInMobile {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}

@@ -1,79 +1,125 @@
-/* --- OVERLAY (Fundo Escuro) --- */
+/* ==========================================================================
+   1. ESTRUTURA BASE (MOBILE FIRST)
+   ========================================================================== */
+.appLayout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--cor-terciaria);
+    /* Transição suave quando o usuário troca a cor de fundo */
+    transition: background-color var(--transition-speed);
+}
+
+.mainContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: var(--header-mobile-height);
+    padding: 20px;
+    /* Transição para margens (sidebar) e cores do tema */
+    transition: all var(--transition-speed);
+}
+
+.mainContent {
+    flex: 1;
+}
+
+/* ==========================================================================
+   2. VARIANTES E ESTADOS (DESKTOP)
+   ========================================================================== */
+@media (min-width: 769px) {
+    .appLayout {
+        flex-direction: row;
+    }
+
+    .mainContainer {
+        margin-top: 0;
+        margin-left: var(--sidebar-width);
+        padding: 40px;
+    }
+
+    /* Estado Retraído: O container ocupa o espaço da sidebar menor */
+    .sidebarCollapsed .mainContainer {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+}
+
+/* ==========================================================================
+   3. MODAL DE PERSONALIZAÇÃO (DINÂMICO)
+   ========================================================================== */
 .themeOverlay {
     position: fixed;
-    inset: 0; /* Substitui top/left/width/height de forma limpa */
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
+    inset: 0;
+    /* Usa o RGB da terciária para o desfoque combinar com o fundo */
+    background: rgba(var(--cor-terciaria-rgb), 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
     padding: 20px;
-    cursor: pointer; /* Indica que clicar fora fecha */
+    cursor: pointer;
 }
 
-/* --- MODAL (O Cartão) --- */
 .themeModal {
-    background: var(--cor-terciaria);
-    border: 1px solid var(--cor-secundaria);
+    /* Usa a Quaternária para se destacar do fundo Terciário */
+    background: var(--cor-quaternaria);
+    /* Borda brilha sutilmente com a cor secundária (Cor 2) */
+    border: 1px solid rgba(var(--cor-secundaria-rgb), 0.3);
     padding: 25px;
-    border-radius: 24px;
+    border-radius: 28px;
     width: 100%;
-    max-width: 380px; /* Tamanho equilibrado entre os dois que você mandou */
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    cursor: default; /* Evita que o cursor de fechar apareça dentro do modal */
-    
-    /* Animação que você gostou */
-    animation: popIn 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+    max-width: 380px;
+    /* Sombra com profundidade e um leve glow da cor do tema */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(var(--cor-secundaria-rgb), 0.1);
+    cursor: default;
+    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* --- HEADER DO MODAL --- */
 .modalHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+}
+
+.modalHeader span {
     color: var(--cor-quintenaria);
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.8rem;
     letter-spacing: 1px;
+    /* Detalhe visual que usa a Cor 2 */
+    border-left: 3px solid var(--cor-secundaria);
+    padding-left: 10px;
 }
 
-/* --- BOTÃO FECHAR --- */
 .closeBtn {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(var(--cor-quintenaria-rgb), 0.05);
     border: none;
-    color: #fff;
-    width: 32px;
-    height: 32px;
+    color: var(--cor-quintenaria);
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
     transition: all 0.2s ease;
 }
 
 .closeBtn:hover {
     background: var(--cor-secundaria);
-    transform: scale(1.1);
+    color: #fff;
+    transform: rotate(90deg) scale(1.1);
 }
 
-/* --- ANIMAÇÃO --- */
-@keyframes popIn {
-    from { 
-        opacity: 0; 
-        transform: scale(0.9) translateY(10px); 
-    }
-    to { 
-        opacity: 1; 
-        transform: scale(1) translateY(0); 
-    }
-}
-
-/* Escondido por padrão no Desktop */
+/* ==========================================================================
+   4. BOTÃO FLUTUANTE (MOBILE ONLY)
+   ========================================================================== */
 .floatingThemeBtn {
     display: none;
 }
@@ -82,27 +128,43 @@
     .floatingThemeBtn {
         display: flex;
         position: fixed;
-        right: 20px;
-        bottom: 80px; /* Acima do footer/barra de navegação se houver */
-        width: 50px;
-        height: 50px;
+        right: 25px;
+        bottom: 35px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
+        /* O botão flutuante é a estrela: usa a Cor 2 (Secundária) */
         background: var(--cor-secundaria);
         border: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        z-index: 999; /* Abaixo apenas do overlay do tema */
+        /* Sombra neon baseada na Cor 2 */
+        box-shadow: 0 10px 25px rgba(var(--cor-secundaria-rgb), 0.4);
+        z-index: 999;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        animation: slideIn 0.3s ease-out;
+        animation: slideIn 0.4s ease-out;
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .floatingThemeBtn img {
-        filter: brightness(0) invert(1); /* Deixa o ícone branco */
+        filter: brightness(0) invert(1);
+        transition: transform 0.3s ease;
+    }
+
+    .floatingThemeBtn:active {
+        transform: scale(0.9);
     }
 }
 
+/* ==========================================================================
+   5. ANIMAÇÕES
+   ========================================================================== */
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 @keyframes slideIn {
-    from { transform: translateX(100px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from { transform: translateX(100px) rotate(180deg); opacity: 0; }
+    to { transform: translateX(0) rotate(0); opacity: 1; }
 }

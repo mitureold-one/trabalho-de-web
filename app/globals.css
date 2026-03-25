@@ -1,10 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+/* Remova o @import da Montserrat se estiver usando as fontes Geist do Next.js no RootLayout */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
 }
 
 :root {
@@ -21,57 +20,23 @@
     --transition-speed: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ESTRUTURA BASE */
-.app-layout {
-    display: flex;
-    flex-direction: column; /* Padrão mobile */
-    min-height: 100vh;
+body {
     background-color: var(--cor-terciaria);
-    overflow-x: hidden;
+    color: var(--cor-quintenaria);
+    /* Se não estiver usando Geist, defina a fonte aqui */
+    font-family: 'Montserrat', sans-serif; 
 }
 
-/* ✅ O SEGREDO: Criamos um container para alinhar Main + Footer */
-.main-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    transition: all var(--transition-speed);
-}
-
-.main-content {
-    flex: 1;
-    width: 100%;
-}
-
-/* --- COMPUTADOR (SIDEBAR) --- */
-@media (min-width: 769px) {
-    .app-layout {
-        flex-direction: row;
-    }
-    
-    /* Aplicamos a margem no container que engloba Main e Footer */
-    .main-container {
-        margin-left: var(--sidebar-width);
-        padding: 40px;
-    }
-
-    /* ESTADO RETRAÍDO */
-    .sidebar-collapsed .main-container {
-        margin-left: var(--sidebar-collapsed-width);
-    }
-}
-
-/* --- CELULAR (HEADER TOPO) --- */
-@media (max-width: 768px) {
-    .main-container {
-        margin-top: var(--header-mobile-height);
-        padding: 20px;
-        margin-left: 0;
-    }
-}
-
-/* Utilitário para fontes do Next.js (Geist) se você for usar elas */
 .antialiased {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar personalizada (opcional, mas fica bonito) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--cor-quaternaria);
+    border-radius: 10px;
 }

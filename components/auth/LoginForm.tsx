@@ -1,53 +1,50 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/AuthContext" // 1. Usando o Poder Central
+import { useAuth } from "@/AuthContext" 
 import styles from "@/styles/auth/login.module.css"
 
 interface SignInProps {
   onOpenReset: () => void;  
-  onSuccess: () => void; // Removi o envio de dados, o contexto já os tem
+  onSuccess: () => void; 
   toggleMobile: () => void; 
 }
 
 export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: SignInProps) {
-  const { signIn } = useAuth() // Consumindo a central de verdade
-  
+  const { signIn } = useAuth() 
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent)
+  {
     e.preventDefault();
-    
-    // 2. Blindagem contra múltiplos submits
+
     if (loading) return;
 
     setLoading(true);
     setErrorMsg(null);
 
     try {
-      // 3. Higienização e Uso do Contexto
-      // O componente agora é agnóstico à implementação (Firebase/API)
       await signIn(email.trim().toLowerCase(), senha);
       
-      // Se chegou aqui, o AuthContext já atualizou o estado global 'user'
       onSuccess(); 
-    } catch (error: unknown) {
-      console.error("Login Error:", error);
+    } catch (error: any) {
 
-      // 4. Tipagem Segura (Unknown -> Error)
-      if (error instanceof Error) {
-        const msg = error.message === "Invalid login credentials" 
-          ? "E-mail ou senha incorretos." 
-          : "Erro ao entrar. Tente novamente mais tarde.";
-        setErrorMsg(msg);
+      const errorMessage = error.error_description || error.message || "";
+      
+      const isAuthError = 
+        errorMessage.includes("Invalid login credentials") || 
+        error.status === 400;
+
+      if (isAuthError) {
+        setErrorMsg("E-mail ou senha incorretos.");
       } else {
-        setErrorMsg("Ocorreu um erro inesperado.");
+        setErrorMsg("Erro ao entrar. Tente novamente.");
       }
     } finally {
-      // 5. Garantia de consistência da UI
+      
       setLoading(false);
     }
   }
@@ -57,8 +54,6 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
       <header className={styles.header}>
         <h1>Login</h1>
       </header>
-    
-      {/* 6. Consistência: Fieldset desabilitado como no Signup */}
       <fieldset className={styles.inputFields} disabled={loading}>
         <input
           type="email"
@@ -78,7 +73,6 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
 
         <div className={styles.forgotPassword}>
           Esqueceu a senha?{" "}
-          {/* 7. Acessibilidade: Botão em vez de span */}
           <button 
             type="button"
             className={styles.linkButton} 

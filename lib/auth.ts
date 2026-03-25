@@ -110,18 +110,25 @@ export async function registrarUsuario({ email, password, name, file }: any) {
  * LOGIN E SESSÃO: Usando o Mapper e a busca centralizada
  */
 export async function loginUsuario(email: string, pass: string): Promise<UserData> {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass })
-  if (error) throw error
+  const { data, error } = await supabase.auth.signInWithPassword({ 
+    email: email.trim(), 
+    password: pass 
+  });
 
-  const profile = await fetchProfile(data.user.id)
-  return mapUserData(data.user, profile)
+  if (error) {
+    throw error; 
+  }
+
+  const profile = await fetchProfile(data.user.id);
+  return mapUserData(data.user, profile);
 }
 
 export async function getSessionUser(): Promise<UserData | null> {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session?.user) return null
-
+  
   const profile = await fetchProfile(session.user.id)
+
   return mapUserData(session.user, profile)
 }
 

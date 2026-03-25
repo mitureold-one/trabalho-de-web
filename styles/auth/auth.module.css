@@ -12,7 +12,8 @@
 }
 
 .container {
-  background-color: #fff;
+  /* Substituído #fff pela cor quaternária do tema */
+  background-color: var(--cor-quintenaria); 
   border-radius: 30px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -30,6 +31,7 @@
   height: 100%;
   width: 50%;
   transition: all 0.6s ease-in-out;
+  /* Fundo do formulário usa a cor quintenária */
   background-color: var(--cor-quintenaria);
 }
 
@@ -70,8 +72,7 @@
   }
 }
 
-/* --- MOBILE --- */
-/* --- CONFIGURAÇÃO DESKTOP (FORA DO MEDIA QUERY) --- */
+/* --- CONFIGURAÇÃO DESKTOP --- */
 .mobileGradientHeader {
   display: none;
 }
@@ -99,16 +100,15 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    background: #fff;
+    /* Substituído #fff pela cor quaternária */
+    background: var(--cor-quaternaria);
     border-radius: 25px !important; 
     overflow: hidden; 
     
-    /* EFEITO DE FLUTUAÇÃO: Sombra + Animação */
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     animation: levitate 4s ease-in-out infinite;
   }
 
-  /* O "topo" colorido */
   .mobileGradientHeader {
     display: block !important;
     width: 100%;
@@ -121,7 +121,6 @@
     border-radius: 25px 25px 0 0; 
   }
 
-  /* RESET DOS FORMULÁRIOS (Mata a sobreposição) */
   .formContainer, .signIn, .signUp {
     position: relative !important; 
     width: 100% !important;
@@ -133,7 +132,6 @@
     background: transparent !important;
   }
 
-  /* LÓGICA DE TROCA REACT */
   .hiddenMobile {
     display: none !important;
   }
@@ -151,14 +149,10 @@
 
 /* ANIMAÇÃO DE FLUTUAÇÃO */
 @keyframes levitate {
-  0% {
-    transform: translateY(0);
+  0% { transform: translateY(0); }
+  50% { 
+    transform: translateY(-10px); 
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2); 
   }
-  50% {
-    transform: translateY(-10px); /* Sobe 10px */
-    box-shadow: 0 25px 45px rgba(0,0,0,0.2); /* Sombra aumenta quando sobe */
-  }
-  100% {
-    transform: translateY(0);
-  }
+  100% { transform: translateY(0); }
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; 
 import ClientLayoutWrapper from "@/components/layout/ClientLayoutWrapper";
 
 const geistSans = Geist({
@@ -18,7 +18,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Chat da Galera | Sua Comunidade",
   description: "O lugar seguro para conversar com sua galera em tempo real.",
-  keywords: ["chat", "comunidade", "realtime", "nextjs"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

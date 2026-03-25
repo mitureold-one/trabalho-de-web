@@ -13,16 +13,20 @@ interface Props {
 export default function WelcomeModal({ isOpen, userData, onClose }: Props) {
   if (!isOpen) return null;
 
-  // Pegamos o primeiro nome para um toque mais humano
   const firstName = userData?.name?.split(" ")[0] || "Viajante";
 
-    useEffect(() => {
+   useEffect(() => {
+  // 1. Só criamos o timer se o modal estiver realmente aberto
+  if (isOpen) {
     const timer = setTimeout(() => {
-      onClose()
-    }, 4000) // aqui você controla o tempo REAL
+      console.log("Timer finalizado, chamando onClose...");
+      onClose(); 
+    }, 4000);
 
-    return () => clearTimeout(timer)
-  }, [])
+    // 2. Limpeza: se o componente for destruído antes dos 4s, cancelamos o timer
+    return () => clearTimeout(timer);
+  }
+}, [isOpen, onClose]); // <--- Dependências importantes!
 
   return (
     
