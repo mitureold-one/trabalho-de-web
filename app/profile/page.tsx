@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/AuthContext"
-import styles from "@/styles/profile/profile.module.css"
+import styles from "@/styles/profile.module.css"
 import { Camera } from "lucide-react"
 
 export default function Perfil() {
