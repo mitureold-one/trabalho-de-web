@@ -1,5 +1,3 @@
-/* Remova o @import da Montserrat se estiver usando as fontes Geist do Next.js no RootLayout */
-
 * {
     margin: 0;
     padding: 0;
@@ -7,24 +5,42 @@
 }
 
 :root {
+    /* ✅ Cores base — controladas pelo ColorController */
     --cor-primaria: #061644;
     --cor-secundaria: #f50911;
     --cor-terciaria: #0b0a1d;
-    --cor-quaternaria: #1c1c3a; 
-    --cor-quintenaria: #ffffff;   
+    --cor-quaternaria: #1c1c3a;
+
+    /* ✅ Cor fixa — não muda com o tema */
+    --cor-quintenaria: #ffffff;
+
+    /* ✅ Versões RGB para usar com rgba() */
+    --cor-primaria-rgb: 6, 22, 68;
     --cor-secundaria-rgb: 245, 9, 17;
     --cor-terciaria-rgb: 11, 10, 29;
+    --cor-quaternaria-rgb: 28, 28, 58;
+    --cor-quintenaria-rgb: 255, 255, 255;
+
+    /* ✅ Variáveis de layout */
     --sidebar-width: 260px;
     --sidebar-collapsed-width: 85px;
     --header-mobile-height: 70px;
     --transition-speed: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ✅ Variáveis utilitárias derivadas do tema */
+    --surface-1: var(--cor-terciaria);           /* fundo da página */
+    --surface-2: var(--cor-quaternaria);          /* cards, modais */
+    --surface-3: var(--cor-primaria);             /* sidebar, headers */
+    --accent: var(--cor-secundaria);              /* botões, destaques */
+    --text-primary: var(--cor-quintenaria);       /* texto principal */
+    --text-muted: rgba(var(--cor-quintenaria-rgb, 255,255,255), 0.5); /* texto secundário */
+    --border-color: rgba(var(--cor-quaternaria-rgb), 0.4);
 }
 
 body {
-    background-color: var(--cor-terciaria);
-    color: var(--cor-quintenaria);
-    /* Se não estiver usando Geist, defina a fonte aqui */
-    font-family: 'Montserrat', sans-serif; 
+    background-color: var(--surface-1);
+    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
 }
 
 .antialiased {
@@ -32,11 +48,16 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar personalizada (opcional, mas fica bonito) */
 ::-webkit-scrollbar {
     width: 8px;
 }
+::-webkit-scrollbar-track {
+    background: var(--surface-1);
+}
 ::-webkit-scrollbar-thumb {
-    background: var(--cor-quaternaria);
+    background: var(--surface-2);
     border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
 }

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react"
 import { supabase } from "@/lib/supabase"
 import { getMessages, MessageData } from "@/lib/messages"
 
-// ... seus imports
 
 export function useChatMessages(roomId: string) {
   const [messages, setMessages] = useState<MessageData[]>([])
