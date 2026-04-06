@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import RoomList from "@/components/room/roomList";
-import CreateRoomModal from "@/components/room/createRoomModal"; 
-import styles from "@/styles/home.module.css";
-import { getRooms } from "@/lib/rooms";
+import RoomList from "@/app/_components/_room/RoomList";
+import CreateRoomModal from "@/app/_components/_room/CreateRoomModal"; 
+import styles from "@/app/styles/home.module.css";
+import { getRooms } from "@/app/lib/Rooms";
 import { useAuth } from "@/AuthContext"; 
-import { Room } from "@/types/room";
+import { Room } from "@/app/types/room";
 
 // 1. INTERFACE COMPLETA: Alinhada com o que o RoomList/Card precisa
 

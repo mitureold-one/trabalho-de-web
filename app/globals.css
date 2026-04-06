@@ -1,3 +1,4 @@
+/* 1. RESET E CONFIGURAÇÕES GLOBAIS */
 * {
     margin: 0;
     padding: 0;
@@ -5,42 +6,49 @@
 }
 
 :root {
-    /* ✅ Cores base — controladas pelo ColorController */
+    /* ✅ CORES BASE (Manipuladas pelo ColorController via JS) */
     --cor-primaria: #061644;
     --cor-secundaria: #f50911;
     --cor-terciaria: #0b0a1d;
     --cor-quaternaria: #1c1c3a;
-
-    /* ✅ Cor fixa — não muda com o tema */
     --cor-quintenaria: #ffffff;
 
-    /* ✅ Versões RGB para usar com rgba() */
+    /* ✅ VERSÕES RGB (Para transparências com rgba) */
     --cor-primaria-rgb: 6, 22, 68;
     --cor-secundaria-rgb: 245, 9, 17;
     --cor-terciaria-rgb: 11, 10, 29;
     --cor-quaternaria-rgb: 28, 28, 58;
     --cor-quintenaria-rgb: 255, 255, 255;
 
-    /* ✅ Variáveis de layout */
+    /* ✅ VARIÁVEIS DE LAYOUT */
     --sidebar-width: 260px;
     --sidebar-collapsed-width: 85px;
     --header-mobile-height: 70px;
     --transition-speed: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* ✅ Variáveis utilitárias derivadas do tema */
-    --surface-1: var(--cor-terciaria);           /* fundo da página */
-    --surface-2: var(--cor-quaternaria);          /* cards, modais */
-    --surface-3: var(--cor-primaria);             /* sidebar, headers */
-    --accent: var(--cor-secundaria);              /* botões, destaques */
-    --text-primary: var(--cor-quintenaria);       /* texto principal */
-    --text-muted: rgba(var(--cor-quintenaria-rgb, 255,255,255), 0.5); /* texto secundário */
+    /* ✅ VARIÁVEIS SEMÂNTICAS (Derivadas das cores base) */
+    --surface-1: var(--cor-terciaria);       /* Fundo principal */
+    --surface-2: var(--cor-quaternaria);     /* Cards e Modais */
+    --surface-3: var(--cor-primaria);        /* Sidebar e Header */
+    --accent: var(--cor-secundaria);         /* Destaques e Botões */
+    --text-primary: var(--cor-quintenaria);   /* Texto Principal */
+    --text-muted: rgba(var(--cor-quintenaria-rgb), 0.5);
     --border-color: rgba(var(--cor-quaternaria-rgb), 0.4);
 }
 
+/* 2. ESTILOS DO CORPO */
 body {
     background-color: var(--surface-1);
     color: var(--text-primary);
-    font-family: 'Montserrat', sans-serif;
+    /* ✅ Geist Sans vinda do layout.tsx */
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+    min-height: 100vh;
+}
+
+code {
+    /* ✅ Geist Mono vinda do layout.tsx */
+    font-family: var(--font-geist-mono), monospace;
 }
 
 .antialiased {
@@ -48,16 +56,27 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* 3. SCROLLBAR PERSONALIZADA */
 ::-webkit-scrollbar {
     width: 8px;
 }
+
 ::-webkit-scrollbar-track {
     background: var(--surface-1);
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--surface-2);
     border-radius: 10px;
+    border: 2px solid var(--surface-1); /* Cria um espaçamento elegante */
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
+}
+
+/* 4. SELEÇÃO DE TEXTO */
+::selection {
+    background-color: var(--accent);
+    color: var(--cor-quintenaria);
 }

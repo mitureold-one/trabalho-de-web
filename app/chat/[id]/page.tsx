@@ -2,9 +2,9 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Chatbox from "@/components/chat/chatbox";
+import Chatbox from "@/app/_components/_chat/ChatBox";
 import { useAuth } from "@/AuthContext";
-import styles from "@/styles/chat/chat.module.css";
+import styles from "@/app/styles/chat/chat.module.css";
 
 export default function ChatRoomPage() {
   const params = useParams();

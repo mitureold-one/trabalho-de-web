@@ -3,13 +3,13 @@
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/AuthContext"
-import styles from "@/styles/auth/auth.module.css"
+import styles from "@/app/styles/auth/auth.module.css"
 
-import LoginForm from "@/components/auth/LoginForm"
-import SignupForm from "@/components/auth/SignupForm"
-import TogglePanel from "@/components/auth/TogglePanel"
-import ResetPasswordModal from "@/components/auth/ResetPasswordModal"
-import WelcomeModal from "@/components/auth/welcomeModal"
+import LoginForm from "@/app/_components/_auth/LoginForm"
+import SignupForm from "@/app/_components/_auth/SignupForm"
+import TogglePanel from "@/app/_components/_auth/TogglePanel"
+import ResetPasswordModal from "@/app/_components/_auth/ResetPasswordModal"
+import WelcomeModal from "@/app/_components/_auth/WelcomeModal"
 
 export default function Home() {
   const router = useRouter()

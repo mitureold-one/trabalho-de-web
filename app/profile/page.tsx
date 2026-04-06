@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/app/lib/Supa-base"
 import { useAuth } from "@/AuthContext"
-import styles from "@/styles/profile.module.css"
+import styles from "@/app/styles/profile.module.css"
 import { Camera } from "lucide-react"
 
 export default function Perfil() {
