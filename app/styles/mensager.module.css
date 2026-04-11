@@ -1,0 +1,30 @@
+.messageContainer {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Variante de Erro */
+.error {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+}
+
+/* Variante de Sucesso */
+.success {
+    background-color: #f0fff4;
+    border: 1px solid #9ae6b4;
+    color: #2f855a;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}

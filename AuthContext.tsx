@@ -1,4 +1,3 @@
-// Contexto de autenticação para gerenciar o estado de login do usuário
 "use client"
 
 import { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback, useRef } from "react"
@@ -11,7 +10,7 @@ import { AuthContextType } from "@/app/interfaces/context/auth-context"
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserDto | null>(null) // Atualizado para UserDto
+  const [user, setUser] = useState<UserDto | null>(null) 
   const [loading, setLoading] = useState(true)
   const isSigningIn = useRef(false)
 
@@ -70,7 +69,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refreshUser])
 
   const signIn = useCallback(async (email: string, pass: string) => {
-    setLoading(true)
     isSigningIn.current = true 
     try {
       await loginUsuario(email, pass)
@@ -78,8 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await refreshUser(session)
     } catch (error) {
       isSigningIn.current = false
-      setLoading(false)
-      throw error
+      throw error 
     }
   }, [refreshUser])
 

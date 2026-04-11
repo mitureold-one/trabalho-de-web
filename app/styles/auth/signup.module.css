@@ -3,13 +3,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* Distribui os elementos para usar todo o espaço */
+    justify-content: space-between;
     height: 100%;
     width: 100%;
     padding: 35px 45px 25px 45px; 
     text-align: center;
     box-sizing: border-box;
-    overflow: hidden; /* Mantém a estética do card sem scroll interno */
     transition: background-color 0.3s ease;
 }
 
@@ -21,64 +20,13 @@
     letter-spacing: -1px;
 }
 
-/* --- ÁREA DE AVATAR --- */
-.avatarSection {
-    margin: 10px 0;
-}
-
-.avatarContainer {
-    position: relative;
-    width: 95px;
-    height: 95px;
-    margin: 0 auto;
-}
-
-.avatarLabel {
-    cursor: pointer;
-    display: block;
-}
-
-.avatarImage {
-    width: 95px;
-    height: 95px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--cor-primaria);
-    background-color: #eee;
-    transition: transform 0.3s ease;
-}
-
-.avatarContainer:hover .avatarImage {
-    transform: scale(1.05);
-}
-
-.cameraIcon {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: var(--cor-secundaria);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--cor-quintenaria);
-}
-
-.cameraIcon img {
-    width: 16px;
-    height: 16px;
-    filter: invert(1);
-}
-
 /* --- CAMPOS DE ENTRADA --- */
 .inputFields {
     border: none;
     padding: 0;
     margin: 0;
     width: 100%;
-    display: flex;
+    display: right;
     flex-direction: column;
     align-items: center;
     gap: 12px;
@@ -99,23 +47,34 @@
 .inputFields input:focus {
     border-color: var(--cor-primaria);
     box-shadow: 0 4px 12px rgba(var(--cor-primaria-rgb), 0.2);
-    background-color: var(--cor-quintenaria);
 }
 
-/* --- FEEDBACK --- */
-.feedbackArea {
-    min-height: 40px; /* Reserva espaço para o erro não "pular" o layout */
-    width: 100%;
+.forgotPassword {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
 }
 
+.linkButton {
+    background: none;
+    border: none;
+    color: var(--cor-secundaria);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+}
+
+/* --- ESTILO DA MENSAGEM (SHAKE) --- */
 .errorMessage {
-    color: var(--cor-secundaria);;
+    color: var(--cor-secundaria);
     font-size: 13px;
     font-weight: 600;
+    margin-top: 10px;
     animation: shake 0.4s ease-in-out;
 }
 
-/* --- FOOTER E BOTÃO --- */
+/* --- FOOTER E BOTÃO COM ANIMAÇÃO --- */
 .footer {
     width: 100%;
     display: flex;
@@ -126,7 +85,7 @@
 
 .button {
     background-color: var(--cor-secundaria);
-    color:var(--cor-quintenaria);
+    color: var(--cor-quintenaria);
     font-size: 13px;
     padding: 15px;
     width: 100%;
@@ -137,12 +96,12 @@
     text-transform: uppercase;
     cursor: pointer;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Necessário para o raio não vazar */
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* SHIMMER (RAIO) NO HOVER */
+/* EFEITO DE RAIO (SHIMMER) */
 .button::before {
     content: "";
     position: absolute;
@@ -163,10 +122,6 @@
     filter: brightness(1.1);
 }
 
-.button:disabled::before {
-    animation: shine 1.5s infinite;
-}
-
 .button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -175,12 +130,12 @@
 .mobileToggleLink {
     font-size: 14px;
     color: #888;
-    cursor: pointer;
 }
 
-.linkHighlight {
-    color: var(--cor-secundaria);
-    font-weight: 700;
+/* --- ANIMAÇÕES --- */
+@keyframes shine {
+    0% { left: -150%; }
+    100% { left: 200%; }
 }
 
 /* --- MOBILE --- */
@@ -189,17 +144,5 @@
         padding: 150px 25px 30px 25px !important; 
         background: transparent !important;
         justify-content: flex-start;
-        overflow-y: auto; /* No mobile permite scroll se o teclado subir */
     }
-}
-
-@keyframes shine {
-    0% { left: -150%; }
-    100% { left: 200%; }
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
 }

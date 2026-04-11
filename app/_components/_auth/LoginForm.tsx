@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useAuth } from "@/AuthContext" 
 import styles from "@/app/styles/auth/login.module.css"
+import Mensager from "./Mensager";
 
 interface SignInProps {
   onOpenReset: () => void;  
@@ -15,39 +16,31 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [loading, setLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  async function handleLogin(e: React.FormEvent)
-  {
-    e.preventDefault();
+  async function handleLogin(e: React.FormEvent) {
+  e.preventDefault();
+  if (loading) return;
 
-    if (loading) return;
+  setLoading(true);
+  setErrorMsg(null);
+  setSuccessMsg(null);
 
-    setLoading(true);
-    setErrorMsg(null);
+  try {
+    await signIn(email.trim().toLowerCase(), senha); 
+    setSuccessMsg("Bem-vindo de volta!");
+    onSuccess(); 
 
-    try {
-      await signIn(email.trim().toLowerCase(), senha);
-      
-      onSuccess(); 
-    } catch (error: any) {
+  } catch (error: any) {
+    setLoading(false);
 
-      const errorMessage = error.error_description || error.message || "";
-      
-      const isAuthError = 
-        errorMessage.includes("Invalid login credentials") || 
-        error.status === 400;
+    const errorMessage = error.error_description || error.message || "";
+    const isAuthError = errorMessage.includes("Invalid login credentials") || error.status === 400;
 
-      if (isAuthError) {
-        setErrorMsg("E-mail ou senha incorretos.");
-      } else {
-        setErrorMsg("Erro ao entrar. Tente novamente.");
-      }
-    } finally {
-      
-      setLoading(false);
-    }
+    setErrorMsg(isAuthError ? "E-mail ou senha incorretos." : "Erro ao entrar. Tente novamente.");
   }
+}
 
   return (
     <form onSubmit={handleLogin} className={styles.form}>
@@ -83,11 +76,10 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
           </button>
         </div>
 
-        {errorMsg && (
-          <span className={styles.errorMessage} role="alert">
-            {errorMsg}
-          </span>
-        )}
+
+        {errorMsg && <Mensager message={errorMsg} />}
+        {successMsg && <Mensager message={successMsg} type="success" />}
+
       </fieldset>
 
       <footer className={styles.footer}>
