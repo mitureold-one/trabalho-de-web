@@ -84,14 +84,18 @@ export const roomDao = {
    * ✅ ENTRAR EM SALA PRIVADA (RPC)
    */
   async verifyAndJoin(roomId: string, passwordTyped: string): Promise<boolean> {
-    const { data, error } = await supabase.rpc('join_private_room', {
-      target_room_id: roomId,
-      typed_password: passwordTyped
-    });
+  const { data, error } = await supabase.rpc('join_private_room', {
+    target_room_id: roomId,
+    typed_password: passwordTyped
+  });
 
-    if (error) throw new Error(this.handleError(error));
-    if (!data) throw new Error("Senha incorreta! ❌");
-    return true;
+  if (error) throw new Error(this.handleError(error));
+
+  if (data === false) {
+    throw new Error("Senha incorreta! ❌");
+  }
+
+  return true;
   },
 
   /**
