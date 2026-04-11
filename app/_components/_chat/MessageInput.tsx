@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { sendChatMessage } from "@/app/lib/Messages"
-import { UserData } from "@/app/lib/Auth"
+import { messageDao } from "@/app/interfaces/dao/message-dao" 
+import { UserDto } from "@/app/interfaces/dto/user-dto"
 import styles from "@/app/styles/chat/messageinput.module.css"
 
 interface MessageInputProps {
   roomId: string
-  currentUser: UserData | null
+  currentUser: UserDto | null 
   message: string
   setMessage: (val: string) => void
 }
@@ -20,6 +20,7 @@ export default function MessageInput({ roomId, currentUser, message, setMessage 
     if (e) e.preventDefault()
 
     const textToSend = message.trim()
+    // 2. currentUser.id agora é o padrão
     if (!textToSend || !currentUser || sending) return
 
     try {
@@ -27,10 +28,8 @@ export default function MessageInput({ roomId, currentUser, message, setMessage 
       setMessage("") 
       inputRef.current?.focus()
 
-      await sendChatMessage({
-        content: textToSend,
-        room_id: roomId
-      })
+      // 3. O DAO agora cuida da "sujeira" do snake_case
+      await messageDao.sendMessage(roomId, textToSend)
       
     } catch (err: any) {
       console.error("Erro ao enviar:", err.message)

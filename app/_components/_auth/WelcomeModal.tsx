@@ -1,31 +1,29 @@
 "use client";
 import Image from "next/image";
 import styles from "@/app/styles/modal/modal.welcome.module.css";
-import { UserData } from "@/app/lib/Auth";
+import { UserDto } from "@/app/interfaces/dto/user-dto"; 
 import { useEffect } from "react";
 
 interface Props {
   isOpen: boolean;
-  userData: Partial<UserData> | null;
+  userData: Partial<UserDto> | null; 
   onClose: () => void;
 }
 
 export default function WelcomeModal({ isOpen, userData, onClose }: Props) {
-  // ✅ hooks sempre antes de qualquer return condicional
+  // ✅ Agora usamos 'name' (que já era igual, mas vem do DTO)
   const firstName = userData?.name?.split(" ")[0] || "Viajante";
 
   useEffect(() => {
-    if (!isOpen) return; // ✅ condição dentro do hook, não fora
+    if (!isOpen) return;
 
     const timer = setTimeout(() => {
-      console.log("Timer finalizado, chamando onClose...");
       onClose();
     }, 4000);
 
     return () => clearTimeout(timer);
   }, [isOpen, onClose]);
 
-  // ✅ return condicional só aqui, depois dos hooks
   if (!isOpen) return null;
 
   return (
@@ -34,7 +32,7 @@ export default function WelcomeModal({ isOpen, userData, onClose }: Props) {
         <div className={styles.avatarContainer}>
           <div className={styles.ring}></div>
           <Image
-            src={userData?.avatar_url ? `${userData.avatar_url}?v=1` : "/Avatar_default.png"}
+            src={userData?.avatarUrl ? `${userData.avatarUrl}?v=1` : "/Avatar_default.png"}
             className={styles.avatar}
             alt={`Foto de perfil de ${firstName}`}
             width={120}
@@ -43,7 +41,7 @@ export default function WelcomeModal({ isOpen, userData, onClose }: Props) {
           />
         </div>
 
-        <h1 id="welcome-title" className={styles.title}>
+        <h1 className={styles.title}>
           Bem-vindo, {firstName}!
         </h1>
         <p className={styles.subtitle}>

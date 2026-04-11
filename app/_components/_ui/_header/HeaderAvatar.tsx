@@ -15,15 +15,17 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
   const [showGoodbye, setShowGoodbye] = useState(false); 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Lógica única e centralizada de Logout
   const handleLogout = async () => {
-    if (isLoggingOut) return; // Evita cliques múltiplos
+    if (isLoggingOut) return;
 
     setIsLoggingOut(true);
-    setShowGoodbye(true); // O Modal abre aqui e já recebe o user.name nas props
+    setShowGoodbye(true); 
     
     try {
-      await signOut(); // Limpa a sessão no Supabase
+      
+      setTimeout(async () => {
+        await signOut(); 
+      }, 1000);
     } catch (error) {
       console.error("Erro ao sair:", error);
       setIsLoggingOut(false);
@@ -33,17 +35,19 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
 
   if (loading) return <div className={styles.loadingSmall}>...</div>;
   if (!user) return null;
+  
 
   return (
     <>
-      <aside 
+        <aside 
         className={`${styles.userContainer} ${isCollapsed ? styles.collapsed : ""}`} 
         aria-label="Perfil do usuário"
       > 
-        <Link href="/perfil" className={styles.profileLink}>
+        {/* O Link deve envolver tudo o que identifica o usuário */}
+        <Link href="/profile" className={styles.profileLink}>
           <div className={styles.avatarWrapper}>
             <img 
-              src={user.avatar_url || "/Avatar_default.png"} 
+              src={user.avatarUrl || "/Avatar_default.png"} 
               alt={`Foto de ${user.name}`} 
               className={styles.avatarImg} 
               onError={(e) => { e.currentTarget.src = "/Avatar_default.png" }}
@@ -59,6 +63,7 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
           )}
         </Link>
 
+        {/* O botão de Logout fica de fora do Link para não disparar a navegação */}
         <button 
           type="button"
           className={`${styles.logoutBtnRound} ${isLoggingOut ? styles.btnDisabled : ""}`} 
@@ -66,6 +71,7 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
           disabled={isLoggingOut}
           title="Sair da conta"
         >
+        
           <img src="/poder.png" alt="Sair" />
         </button>
       </aside>
@@ -73,7 +79,9 @@ export default function AvatarHeader({ isCollapsed }: AvatarHeaderProps) {
       <GoodbyeModal 
         isOpen={showGoodbye} 
         userName={user.name} 
-      />
+        />
+
+    
     </>
   );
 }

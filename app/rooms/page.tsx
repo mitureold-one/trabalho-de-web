@@ -4,47 +4,46 @@ import { useState, useEffect, useMemo } from "react";
 import RoomList from "@/app/_components/_room/RoomList";
 import CreateRoomModal from "@/app/_components/_room/CreateRoomModal"; 
 import styles from "@/app/styles/home.module.css";
-import { getRooms } from "@/app/lib/Rooms";
+import { roomDao } from "@/app/interfaces/dao/room-dao"; // ✅ Novo DAO
 import { useAuth } from "@/AuthContext"; 
-import { Room } from "@/app/types/room";
-
-// 1. INTERFACE COMPLETA: Alinhada com o que o RoomList/Card precisa
-
+import { RoomDto } from "@/app/interfaces/dto/room-dto"; // ✅ Novo DTO
 
 export default function SalasPage() {
   const { user } = useAuth(); 
-  const [allRooms, setAllRooms] = useState<Room[]>([]);
+  const [allRooms, setAllRooms] = useState<RoomDto[]>([]); // ✅ Tipagem DTO
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState(""); // 2. Estado para Debounce
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 3. DEBOUNCE LOGIC: Evita re-renders pesados a cada tecla
+  // 1. Debounce Logic para Busca
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearch(searchTerm), 300);
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  // 4. SAUDAÇÃO DINÂMICA (Pode ser estendida com um setInterval se necessário)
+  // 2. Saudação Dinâmica
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
     const period = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+    // Usamos user.name do nosso UserDto
     const firstName = user?.name?.trim().split(' ')[0] ?? "viajante";
     return `${period}, ${firstName}! Qual é a boa hoje?`;
   }, [user?.name]);
 
+  // 3. Busca de Salas via DAO
   useEffect(() => {
     let isMounted = true;
     async function fetchRooms() {
       setLoading(true);
       setError(null);
       try {
-        // Na lib: export async function getRooms(): Promise<Room[]>
-        const data = await getRooms();
+        // ✅ O DAO já retorna RoomDto[] formatado
+        const data = await roomDao.getRooms();
         if (isMounted) setAllRooms(data);
-      } catch (err) {
-        if (isMounted) setError("Houve um problema ao sintonizar as salas.");
+      } catch (err: any) {
+        if (isMounted) setError(err.message || "Houve um problema ao sintonizar as salas.");
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -53,7 +52,7 @@ export default function SalasPage() {
     return () => { isMounted = false };
   }, []);
 
-  // 5. FILTRO MEMOIZADO (Usando o termo com debounce)
+  // 4. Filtro Memoizado
   const filteredRooms = useMemo(() => {
     const term = debouncedSearch.toLowerCase().trim();
     if (!term) return allRooms;
@@ -62,7 +61,8 @@ export default function SalasPage() {
     );
   }, [allRooms, debouncedSearch]);
 
-  const handleRoomCreated = (newRoom: Room) => {
+  // 5. Callback de Sucesso (Atualiza a lista local com o DTO recebido)
+  const handleRoomCreated = (newRoom: RoomDto) => {
     setAllRooms((prev) => {
       if (prev.some(r => r.id === newRoom.id)) return prev;
       return [newRoom, ...prev];
@@ -107,11 +107,17 @@ export default function SalasPage() {
           <div className={styles.errorState}>{error}</div>
         ) : loading ? (
           <div className={styles.loader}>Buscando as melhores conversas...</div>
-        ) : filteredRooms.length === 0 ? (
-          // 6. ESTADO VAZIO (Empty State) elegante
+        ) : allRooms.length === 0 ? (
+          /* Estado vazio quando não há NENHUMA sala no banco */
           <div className={styles.emptyState}>
-             <p>Nenhuma sala encontrada para "{searchTerm}" 🔍</p>
-             <button onClick={() => setSearchTerm("")}>Limpar busca</button>
+              <p>Ainda não há salas criadas. Que tal ser o primeiro? 🏘️</p>
+              <button onClick={() => setIsModalOpen(true)}>Criar Sala</button>
+          </div>
+        ) : filteredRooms.length === 0 ? (
+          /* Estado vazio apenas para a busca */
+          <div className={styles.emptyState}>
+              <p>Nenhuma sala encontrada para "{searchTerm}" 🔍</p>
+              <button onClick={() => setSearchTerm("")}>Limpar busca</button>
           </div>
         ) : (
           <RoomList 

@@ -1,39 +1,37 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/app/lib/Supa-base"
-import { getRoomParticipants } from "@/app/lib/Rooms" 
+import { roomDao } from "@/app/interfaces/dao/room-dao" 
+import { MemberDto } from "@/app/interfaces/dto/member-dto"
 
 export function useRoomMembers(roomId: string, currentUserId: string | undefined) {
-  const [members, setMembers] = useState<any[]>([])
+  const [members, setMembers] = useState<MemberDto[]>([])
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!roomId) return
 
-    // 1. Carga Inicial via sua Lib
-    getRoomParticipants(roomId).then(data => {
-      setMembers(data)
-      setLoading(false)
-    })
+    // 1. Carga Inicial via DAO
+    roomDao.getParticipants(roomId)
+      .then(data => {
+        setMembers(data)
+      })
+      .catch(err => console.error("Erro ao carregar membros:", err))
+      .finally(() => setLoading(false))
 
-    // 2. Configuração do Presence (Tempo Real de Conexão)
-    const channel = supabase.channel(`room_presence_${roomId}`, {
+    // 2. Presence (Mantemos a lógica, mas usamos o currentUserId atualizado)
+    const channelName = `room_presence_${roomId}`
+    const channel = supabase.channel(channelName, {
       config: { presence: { key: currentUserId } }
     })
 
     channel
       .on("presence", { event: "sync" }, () => {
         const state = channel.presenceState()
-        // Extraímos apenas os IDs dos usuários que estão com o canal aberto
-        const onlineIds = Object.keys(state)
-        setOnlineUsers(onlineIds)
-      })
-      .on("presence", { event: "join" }, ({ newPresences }) => {
-        console.log("Alguém entrou:", newPresences)
+        setOnlineUsers(Object.keys(state))
       })
       .subscribe(async (status) => {
         if (status === "SUBSCRIBED" && currentUserId) {
-          // "Anuncia" que eu estou online nesta sala
           await channel.track({ online_at: new Date().toISOString() })
         }
       })

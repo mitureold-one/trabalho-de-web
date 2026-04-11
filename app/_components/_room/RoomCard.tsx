@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import styles from "@/app/styles/rooms/roomcard.module.css"
 import { useRouter } from "next/navigation"
-import { verifyAndJoin } from "@/app/lib/Rooms"
-import { Room } from "@/app/types/room";
+import { roomDao } from "@/app/interfaces/dao/room-dao" // ✅ Usando o novo DAO
+import { RoomDto } from "@/app/interfaces/dto/room-dto" // ✅ Usando o novo DTO
 
 interface RoomCardProps {
-  room: Room;
+  room: RoomDto; // ✅ Tipo atualizado
 }
 
 export default function RoomCard({ room }: RoomCardProps) {
@@ -17,21 +17,21 @@ export default function RoomCard({ room }: RoomCardProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  // 1. Limpeza de estado ao fechar o modal
   const handleCloseModal = () => {
     setShowPasswordModal(false);
     setInputPassword("");
     setError(false);
   };
 
-  // 2. Extração de lógica de exibição (Clean Code)
-  const totalMembros = room.room_members?.[0]?.count ?? 0;
-  const nomeCriador = room.creator?.name || "Usuário";
-  const tituloSala = room.name || "Sala sem nome";
+  // ✅ Lógica simplificada: O DTO já entrega os dados mastigados
+  const totalMembros = room.memberCount ?? 0;
+  const nomeCriador = room.creator.name;
+  const tituloSala = room.name;
 
   const handleCardClick = () => {
     if (loading) return;
-    if (room.is_private) {
+    // 🔄 Mudança para camelCase do DTO
+    if (room.isPrivate) {
       setShowPasswordModal(true);
     } else {
       router.push(`/chat/${room.id}`);
@@ -46,12 +46,12 @@ export default function RoomCard({ room }: RoomCardProps) {
     setError(false);
 
     try {
-      await verifyAndJoin(room.id, inputPassword);
+      // ✅ Usando o método do novo DAO
+      await roomDao.verifyAndJoin(room.id, inputPassword);
       router.push(`/chat/${room.id}`);
     } catch (err) {
       setError(true);
       setInputPassword("");
-      // O erro some sozinho após 2s, mas o loading para imediatamente
     } finally {
       setLoading(false);
     }
@@ -76,27 +76,27 @@ export default function RoomCard({ room }: RoomCardProps) {
 
           <div className={styles.infoGroup}>
             <div className={styles.creatorInfo}>
-              {room.creator?.avatar_url ? (
-                <img 
-                  src={room.creator.avatar_url} 
-                  className={styles.miniAvatar} 
-                  alt={`Avatar de ${nomeCriador}`} 
-                />
-              ) : (
-                <span className={styles.userIcon} aria-hidden="true">👤</span>
-              )}
+              <img 
+                // 🔄 Mudança para camelCase: creator.avatarUrl
+                src={room.creator.avatarUrl || "/Avatar_default.png"} 
+                className={styles.miniAvatar} 
+                alt={`Avatar de ${nomeCriador}`} 
+                onError={(e) => { e.currentTarget.src = "/Avatar_default.png" }}
+              />
               <p>Criada por: <span>{nomeCriador}</span></p>
             </div>
           </div>
 
           <div className={styles.footerRow}>
-            <div className={`${styles.statusBadge} ${room.is_private ? styles.private : styles.public}`}>
+            {/* 🔄 Mudança para camelCase: isPrivate */}
+            <div className={`${styles.statusBadge} ${room.isPrivate ? styles.private : styles.public}`}>
               <img 
-                src={room.is_private ? "/cadeado.png" : "/globo-terrestre.png"} 
-                alt={room.is_private ? "Privada" : "Pública"} 
+                src={room.isPrivate ? "/cadeado.png" : "/globo-terrestre.png"} 
+                alt={room.isPrivate ? "Privada" : "Pública"} 
               />
             </div>
-            {room.tema && <span className={styles.topicBadge}>#{room.tema}</span>}
+            {/* O campo 'slug' ou 'description' pode ser usado como badge se desejar */}
+            {room.slug && <span className={styles.topicBadge}>#{room.slug}</span>}
           </div>
         </div>
       </div>

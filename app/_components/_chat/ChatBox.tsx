@@ -6,22 +6,27 @@ import MessageInput from "@/app/_components/_chat/MessageInput"
 import MessageItem  from "@/app/_components/_chat/MessageItem" 
 import MembersSidebar from "./MembersSidebar"
 import styles from "@/app/styles/chat/chatbox.module.css"
+import { UserDto } from "@/app/interfaces/dto/user-dto"
+import { MessageDto } from "@/app/interfaces/dto/message-dto"
 
 interface ChatboxProps {
   roomId: string;
-  currentUser: any; 
+  currentUser: UserDto | null; 
 }
 
 export default function Chatbox({ roomId, currentUser }: ChatboxProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [messageText, setMessageText] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false) 
+  
+  // O hook useChatMessages deve ser atualizado para retornar MessageDto[]
   const { messages, roomData, loading } = useChatMessages(roomId)
 
-  // ✅ Agrupamento inteligente usando useMemo para performance
+  // ✅ Agrupamento inteligente atualizado para MessageDto
   const groupedMessages = useMemo(() => {
-    return messages.reduce((groups: any, message) => {
-      const date = new Date(message.created_at).toLocaleDateString('pt-BR', {
+    return messages.reduce((groups: Record<string, MessageDto[]>, message) => {
+      // 🔄 Mudança: message.created_at -> message.createdAt
+      const date = new Date(message.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'long',
         year: 'numeric'
@@ -73,16 +78,17 @@ export default function Chatbox({ roomId, currentUser }: ChatboxProps) {
           ) : (
             Object.keys(groupedMessages).map((date) => (
               <div key={date} className={styles.dateGroup}>
-                {/* 📅 Divisor de Data */}
                 <div className={styles.dateDivider}>
                   <span>{date}</span>
                 </div>
 
-                {groupedMessages[date].map((msg: any) => (
+                {groupedMessages[date].map((msg) => (
                   <MessageItem 
                     key={msg.id} 
                     msg={msg} 
-                    isMine={msg.user_id === currentUser?.uid} 
+                    // 🔄 Mudança: currentUser.uid -> currentUser.id
+                    // E msg.user_id -> msg.userId
+                    isMine={msg.userId === currentUser?.id} 
                   />
                 ))}
               </div>

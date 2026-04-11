@@ -66,7 +66,7 @@ export default function SignupForm({ toggleMobile, onSuccess }: SignUpProps) {
       // é responsabilidade da Page (Home) via WelcomeModal.
       onSuccess({
         name: novoUsuario.name,
-        avatar_url: novoUsuario.avatar_url
+        avatar_url: novoUsuario.avatarUrl
       })
 
     } catch (err: unknown) {

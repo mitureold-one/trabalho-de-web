@@ -23,10 +23,8 @@ export default function GoodByeModal({ isOpen, userName }: Props) {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(prev => prev - 1), 1000);
       return () => clearTimeout(timer);
-    } else {
-      router.replace("/");
     }
-  }, [isOpen, countdown, router]);
+  }, [isOpen, countdown]);
 
   if (!isOpen) return null;
 

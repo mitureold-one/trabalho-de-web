@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/AuthContext"
 import styles from "@/app/styles/auth/auth.module.css"
-
 import LoginForm from "@/app/_components/_auth/LoginForm"
 import SignupForm from "@/app/_components/_auth/SignupForm"
 import TogglePanel from "@/app/_components/_auth/TogglePanel"

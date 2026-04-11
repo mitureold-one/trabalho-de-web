@@ -1,23 +1,19 @@
+// Contexto de autenticação para gerenciar o estado de login do usuário
 "use client"
 
 import { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback, useRef } from "react"
 import { supabase } from "@/app/lib/Supa-base"
-import { loginUsuario, getSessionUser, logoutUsuario, UserData } from "@/app/lib/Auth"
+import { loginUsuario, getSessionUser, logoutUsuario } from "@/app/lib/Auth"
+import { UserDto } from "@/app/interfaces/dto/user-dto" 
 import { Session, Subscription } from "@supabase/supabase-js"
-
-interface AuthContextType {
-  user: UserData | null
-  loading: boolean
-  signIn: (email: string, pass: string) => Promise<void>
-  signOut: () => Promise<void>
-}
+import { AuthContextType } from "@/app/interfaces/context/auth-context"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserData | null>(null)
+  const [user, setUser] = useState<UserDto | null>(null) // Atualizado para UserDto
   const [loading, setLoading] = useState(true)
-  const isSigningIn = useRef(false) // ✅ flag para evitar ciclo duplo
+  const isSigningIn = useRef(false)
 
   const refreshUser = useCallback(async (session: Session | null) => {
     if (!session) {
@@ -46,7 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log(`[Auth Event]: ${event}`)
 
         if (event === "SIGNED_IN") {
-          // ✅ Se veio do signIn, o refreshUser já rodou lá — ignora aqui
           if (isSigningIn.current) {
             isSigningIn.current = false
             return
@@ -59,6 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else if (event === "SIGNED_OUT") {
           setUser(null)
           setLoading(false)
+          // Em Next.js, useRouter() é preferível, mas window.location resolve o cache
           window.location.href = "/"
         } else if (event === "TOKEN_REFRESHED") {
           await refreshUser(session)
@@ -75,13 +71,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = useCallback(async (email: string, pass: string) => {
     setLoading(true)
-    isSigningIn.current = true // ✅ avisa o listener pra ignorar o SIGNED_IN
+    isSigningIn.current = true 
     try {
       await loginUsuario(email, pass)
-      // loginUsuario já faz signInWithPassword → dispara SIGNED_IN no listener
-      // mas a flag isSigningIn.current vai ignorar ele
       const { data: { session } } = await supabase.auth.getSession()
-      await refreshUser(session) // ✅ refreshUser roda aqui, uma única vez
+      await refreshUser(session)
     } catch (error) {
       isSigningIn.current = false
       setLoading(false)

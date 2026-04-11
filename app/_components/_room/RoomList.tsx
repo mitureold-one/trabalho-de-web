@@ -3,31 +3,33 @@
 import { useMemo } from "react";
 import styles from "@/app/styles/rooms/roomlist.module.css";
 import RoomCard from "@/app/_components/_room/RoomCard";
-import { Room } from "@/app/types/room"; 
+import { RoomDto } from "@/app/interfaces/dto/room-dto"; // ✅ Usando o DTO padronizado
+
 interface RoomListProps {
-  rooms: Room[];       
-  allRooms?: Room[];   
+  rooms: RoomDto[];       
+  allRooms?: RoomDto[];   
   isSearching: boolean;
 }
 
 export default function RoomList({ rooms, allRooms, isSearching }: RoomListProps) {
   
-  // 2. LÓGICA DE NEGÓCIO: Ranking focado apenas na exibição
+  // ✅ Lógica de Ranking limpa e performática
   const popularRooms = useMemo(() => {
-    // Se estiver buscando ou não houver salas, não mostra o "On Fire"
     const source = allRooms || rooms;
     if (isSearching || source.length === 0) return [];
     
     return [...source]
       .sort((a, b) => {
-        const countA = a.room_members?.[0]?.count ?? 0;
-        const countB = b.room_members?.[0]?.count ?? 0;
+        // 🔄 Antes: a.room_members?.[0]?.count
+        // 🔄 Agora: a.memberCount (Limpo e seguro)
+        const countA = a.memberCount ?? 0;
+        const countB = b.memberCount ?? 0;
         return countB - countA;
       })
       .slice(0, 3);
   }, [rooms, allRooms, isSearching]);
 
-  // 3. ESTADOS VAZIOS (FEEDBACK AO USUÁRIO)
+  // Estados Vazios
   if (rooms.length === 0) {
     return (
       <div className={styles.emptyContainer}>
@@ -46,7 +48,7 @@ export default function RoomList({ rooms, allRooms, isSearching }: RoomListProps
   return (
     <div className={styles.feedWrapper}>
       
-      {/* SEÇÃO "ON FIRE" - Destaque visual */}
+      {/* SEÇÃO "ON FIRE" */}
       {popularRooms.length > 0 && (
         <section className={styles.popularSection}>
           <h2 className={styles.sectionTitle}>

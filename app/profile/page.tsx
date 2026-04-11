@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { supabase } from "@/app/lib/Supa-base"
 import { useAuth } from "@/AuthContext"
+import { storageDao } from "@/app/interfaces/dao/storage-dao" 
+import { userDao } from "@/app/interfaces/dao/user-dao"       
 import styles from "@/app/styles/profile.module.css"
 import { Camera } from "lucide-react"
 
@@ -16,15 +17,13 @@ export default function Perfil() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  // ✅ Preenche com dados do contexto
   useEffect(() => {
     if (user) {
       setNome(user.name || "")
-      setAvatarUrl(user.avatar_url || "")
+      setAvatarUrl(user.avatarUrl || "") 
     }
   }, [user])
 
-  // ✅ Cleanup de memória
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl)
@@ -34,7 +33,9 @@ export default function Perfil() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
     if (!selectedFile) return
-
+    
+    // Deixe o storageDao cuidar das validações se quiser, 
+    // mas manter aqui para feedback instantâneo também é bom.
     if (selectedFile.size > 2 * 1024 * 1024) {
       setErrorMsg("Imagem muito grande (máx 2MB).")
       return
@@ -46,20 +47,6 @@ export default function Perfil() {
     setErrorMsg(null)
   }
 
-  async function uploadAvatar(file: File, userId: string): Promise<string> {
-    const fileExt = file.name.split(".").pop()
-    const fileName = `${userId}/${Date.now()}.${fileExt}`
-
-    const { error } = await supabase.storage
-      .from("avatars")
-      .upload(fileName, file, { upsert: true })
-
-    if (error) throw new Error(`Erro no upload: ${error.message}`)
-
-    const { data } = supabase.storage.from("avatars").getPublicUrl(fileName)
-    return data.publicUrl
-  }
-
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault()
     if (!user) return
@@ -69,23 +56,17 @@ export default function Perfil() {
     setSuccessMsg(null)
 
     try {
-      let newAvatarUrl = avatarUrl
+      let finalAvatarUrl = avatarUrl
 
+      // 1. Upload via DAO (Toda a sujeira de path e policy sumiu daqui)
       if (file) {
-        newAvatarUrl = await uploadAvatar(file, user.uid)
+        finalAvatarUrl = await storageDao.uploadAvatar(file, user.id)
       }
 
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          name: nome.trim(),
-          avatar_url: newAvatarUrl,
-        })
-        .eq("id", user.uid) // ✅ schema correto
+      // 2. Update via DAO (Não precisamos mais saber o nome da tabela ou colunas snake_case)
+      await userDao.upsertProfile(user.id, nome.trim(), finalAvatarUrl)
 
-      if (error) throw error
-
-      setAvatarUrl(newAvatarUrl)
+      setAvatarUrl(finalAvatarUrl)
       setFile(null)
       setPreviewUrl("")
       setSuccessMsg("Perfil atualizado com sucesso!")
@@ -96,7 +77,7 @@ export default function Perfil() {
     }
   }
 
-  if (!user) return <div>Carregando...</div>
+  if (!user) return <div className={styles.loading}>Carregando...</div>
 
   return (
     <div className={styles.page}>
@@ -138,7 +119,7 @@ export default function Perfil() {
             type="email"
             value={user.email || ""}
             disabled
-            style={{ opacity: 0.6, cursor: "not-allowed" }}
+            className={styles.inputDisabled}
           />
           <small>O email não pode ser alterado.</small>
 

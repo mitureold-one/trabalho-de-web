@@ -2,33 +2,30 @@
 
 import Link from "next/link"
 import styles from "@/app/styles/chat/membercard.module.css"
+import { MemberDto } from "@/app/interfaces/dto/member-dto" 
 
 interface MemberCardProps {
-  member: any
+  member: MemberDto 
   isOnline: boolean
 }
 
 export default function MemberCard({ member, isOnline }: MemberCardProps) {
   return (
-    /* O Link funciona como o nosso container principal navegável */
     <Link 
-      href={`/profile/${member?.userId || ''}`} 
+      href={`/profile/${member.userId}`} 
       className={styles.memberLink}
-      title={`Ver perfil de ${member.nome}`}
+      title={`Ver perfil de ${member.name}`}
     >
-      {/* Usamos <article> porque cada card é um conteúdo independente. 
-         Poderia ser um <li> se o seu loop estivesse dentro de uma <ul>.
-      */}
       <article className={styles.memberItem}>
         
-        {/* Figure é ótimo para envolver imagens com significado */}
         <figure className={styles.avatarContainer}>
           <img 
-            src={member.avatar || "/Avatar_default.png"} 
-            alt={`Avatar de ${member.nome}`} 
+            // 🔄 Mapeado do DTO (era member.avatar)
+            src={member.avatarUrl || "/Avatar_default.png"} 
+            alt={`Avatar de ${member.name}`} 
             className={styles.avatar} 
+            onError={(e) => { e.currentTarget.src = "/Avatar_default.png" }}
           />
-          {/* Status visual - Usamos aria-hidden para o leitor de tela não ler uma "bolinha" */}
           <span 
             className={`${styles.statusDot} ${isOnline ? styles.online : styles.offline}`} 
             aria-hidden="true"
@@ -36,8 +33,8 @@ export default function MemberCard({ member, isOnline }: MemberCardProps) {
         </figure>
         
         <div className={styles.info}>
-          {/* h4 ou strong para o nome, dependendo da hierarquia da página */}
-          <strong className={styles.name}>{member.nome}</strong>
+          {/* 🔄 Mapeado do DTO (era member.nome) */}
+          <strong className={styles.name}>{member.name}</strong>
           
           <footer className={styles.role}>
             {member.role === 'admin' ? (

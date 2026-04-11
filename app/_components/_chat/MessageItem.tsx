@@ -1,39 +1,43 @@
+"use client";
+
 import s from "@/app/styles/chat/messageitem.module.css";
+import { MessageDto } from "@/app/interfaces/dto/message-dto"; 
 
 interface MessageItemProps {
-  msg: any; 
+  msg: MessageDto; 
   isMine: boolean;
 }
 
 export default function MessageItem({ msg, isMine }: MessageItemProps) {
   return (
-    /* ✅ Usamos <article> para cada mensagem e aria-label para contexto */
     <article
       className={`${s.messageRow} ${isMine ? s.myMessage : s.theirMessage}`}
-      aria-label={`Mensagem de ${isMine ? "você" : msg.profiles?.name}`}
+      aria-label={`Mensagem de ${isMine ? "você" : msg.author.name}`}
     >
       {!isMine && (
         <img
-          src={msg.profiles?.avatar_url || "/Avatar_default.png"}
+          // 🔄 Mudança: msg.profiles.avatar_url -> msg.author.avatarUrl
+          src={msg.author.avatarUrl || "/Avatar_default.png"}
           className={s.miniAvatar}
           alt="" 
           aria-hidden="true"
+          onError={(e) => { e.currentTarget.src = "/Avatar_default.png" }}
         />
       )}
 
-      {/* ✅ A bolha em si é o container do conteúdo */}
       <div className={`${s.bubble} ${isMine ? s.myBubble : s.theirBubble}`}>
         {!isMine && (
           <span className={s.userLabel}>
-            {msg.profiles?.name}
+            {/* 🔄 Mudança: msg.profiles.name -> msg.author.name */}
+            {msg.author.name}
           </span>
         )}
 
         <p className={s.content}>{msg.content}</p>
 
-        {/* ✅ A hora é um dado complementar, usamos <time> */}
         <time className={s.timeTag}>
-          {new Date(msg.created_at).toLocaleTimeString([], {
+          {/* 🔄 Mudança: msg.created_at -> msg.createdAt */}
+          {new Date(msg.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}

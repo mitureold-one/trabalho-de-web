@@ -12,13 +12,15 @@ interface MembersSidebarProps {
 
 export default function MembersSidebar({ roomId, isOpen }: MembersSidebarProps) {
   const { user } = useAuth()
-  const { members, onlineUsers, loading } = useRoomMembers(roomId, user?.uid)
+  const { members, onlineUsers, loading } = useRoomMembers(roomId, user?.id)
 
-  // Lógica de ordenação: Admin primeiro, depois por nome
+  // Lógica de ordenação
   const sortedMembers = [...members].sort((a, b) => {
     if (a.role === 'admin' && b.role !== 'admin') return -1;
     if (a.role !== 'admin' && b.role === 'admin') return 1;
-    return a.nome.localeCompare(b.nome);
+    const nameA = a.name || "";
+    const nameB = b.name || "";
+    return nameA.localeCompare(nameB);
   });
 
   if (loading) {
@@ -34,7 +36,6 @@ export default function MembersSidebar({ roomId, isOpen }: MembersSidebarProps) 
       className={`${styles.sidebar} ${isOpen ? styles.sidebarActive : ""}`}
       aria-labelledby="sidebar-title"
     >
-      {/* 🟢 Wrapper do Título: Separado visualmente */}
       <header className={styles.headerSection}>
         <div className={styles.titleBadge}>
           <h3 id="sidebar-title" className={styles.title}>
@@ -44,10 +45,10 @@ export default function MembersSidebar({ roomId, isOpen }: MembersSidebarProps) 
         </div>
       </header>
 
-      {/* 🟢 Wrapper da Lista: Envolvendo os itens juntos */}
       <nav className={styles.listSection}>
         <ul className={styles.list}>
           {sortedMembers.map((member) => {
+            
             const isOnline = onlineUsers.includes(member.userId)
             return (
               <li key={member.userId} className={styles.listItem}>

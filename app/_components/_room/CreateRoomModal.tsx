@@ -2,12 +2,13 @@
 
 import styles from "@/app/styles/modal/modal.createroom.module.css";
 import { useState } from "react";
-import { createRoom } from "@/app/lib/Rooms";
+import { roomDao } from "@/app/interfaces/dao/room-dao"; // ✅ Importando o DAO
+import { RoomDto } from "@/app/interfaces/dto/room-dto"; // ✅ Importando o Tipo
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: (newRoom: any) => void; 
+  onSuccess: (newRoom: RoomDto) => void; // ✅ Tipagem correta em vez de any
 }
 
 export default function CreateRoomModal({ isOpen, onClose, onSuccess }: Props) {
@@ -31,7 +32,13 @@ export default function CreateRoomModal({ isOpen, onClose, onSuccess }: Props) {
     setLoading(true);
 
     try {
-      const newRoom = await createRoom(roomName, isPrivate, isPrivate ? password : null);
+      // ✅ Usando o DAO: passamos apenas os campos necessários.
+      // O DAO cuida de buscar o user_id internamente.
+      const newRoom = await roomDao.createRoom(
+        roomName, 
+        isPrivate, 
+        isPrivate ? password : undefined
+      );
       
       setSuccess(true); 
 
@@ -41,13 +48,14 @@ export default function CreateRoomModal({ isOpen, onClose, onSuccess }: Props) {
         setPassword("");
         setSuccess(false);
         
-        // Chama o callback passando os dados da nova sala
+        // Agora o onSuccess entrega um objeto RoomDto padronizado
         if (onSuccess) onSuccess(newRoom); 
         onClose();
-      }, 1500); // Reduzi para 1.5s para não parecer travado
+      }, 1500);
 
     } catch (err: any) {
-      setError(err.message || "Ops! Algo deu errado no servidor. 🛠️");
+      // O DAO já retorna mensagens amigáveis no handleError
+      setError(err.message || "Ops! Algo deu errado. 🛠️");
       setLoading(false);
     }
   }
@@ -131,7 +139,6 @@ export default function CreateRoomModal({ isOpen, onClose, onSuccess }: Props) {
             </div>
           </>
         ) : (
-          /* TELA DE SUCESSO ANIMADA */
           <div className={styles.successState}>
             <div className={styles.successIcon}>✓</div>
             <h3>Sala Criada!</h3>
