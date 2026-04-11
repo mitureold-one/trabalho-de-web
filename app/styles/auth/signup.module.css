@@ -3,91 +3,102 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    height: 100%;
     width: 100%;
-    padding: 35px 45px 25px 45px; 
+    height: 100%;
+    padding: 25px 45px; 
     text-align: center;
     box-sizing: border-box;
-    transition: background-color 0.3s ease;
+    /* Troque justify-content: space-between por gap para não esticar demais */
+    gap: 15px;
+    /* Se o conteúdo for maior que o card, ele permite scroll sutil em vez de vazar */
+    overflow-y: auto; 
 }
 
-.header h1 {
-    font-size: 2rem;
-    color: var(--cor-terciaria);
-    margin: 0; 
-    font-weight: 800;
-    letter-spacing: -1px;
+/* Ajuste a seção de Avatar para não ocupar espaço demais */
+.avatarSection {
+    margin-bottom: 5px;
+    flex-shrink: 0; /* Impede que a foto seja esmagada */
 }
 
-/* --- CAMPOS DE ENTRADA --- */
+.avatarContainer {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.avatarImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--cor-primaria);
+    background-color: #eee;
+    transition: transform 0.3s ease;
+}
+
+.cameraIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--cor-secundaria);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--cor-quintenaria);
+}
+
+.cameraIcon img {
+    width: 16px;
+    height: 16px;
+    filter: invert(1);
+}
+
 .inputFields {
     border: none;
     padding: 0;
     margin: 0;
     width: 100%;
-    display: right;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
+/* Reutilize o estilo de input do login aqui */
 .inputFields input {
     background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 14px 18px;
+    padding: 12px 18px;
     font-size: 15px;
     border-radius: 12px;
     outline: none;
     width: 100%;
     max-width: 320px;
-    transition: all 0.3s ease;
 }
 
-.inputFields input:focus {
-    border-color: var(--cor-primaria);
-    box-shadow: 0 4px 12px rgba(var(--cor-primaria-rgb), 0.2);
+.feedbackArea {
+    width: 100%;
+    min-height: 20px;
 }
 
-.forgotPassword {
-    font-size: 13px;
-    color: #666;
-    margin-top: 5px;
-}
-
-.linkButton {
-    background: none;
-    border: none;
-    color: var(--cor-secundaria);
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0;
-}
-
-/* --- ESTILO DA MENSAGEM (SHAKE) --- */
-.errorMessage {
-    color: var(--cor-secundaria);
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 10px;
-    animation: shake 0.4s ease-in-out;
-}
-
-/* --- FOOTER E BOTÃO COM ANIMAÇÃO --- */
 .footer {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
+    margin-top: auto; /* Empurra o rodapé para o fim se sobrar espaço */
 }
 
+/* Estilo do botão idêntico ao de login */
 .button {
     background-color: var(--cor-secundaria);
     color: var(--cor-quintenaria);
-    font-size: 13px;
-    padding: 15px;
+    padding: 14px;
     width: 100%;
     max-width: 320px; 
     border-radius: 12px;
@@ -95,54 +106,25 @@
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
-    position: relative;
-    overflow: hidden; /* Necessário para o raio não vazar */
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-/* EFEITO DE RAIO (SHIMMER) */
-.button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: skewX(-30deg);
-}
-
-.button:hover:not(:disabled)::before {
-    animation: shine 0.7s forwards;
-}
-
-.button:hover:not(:disabled) {
-    transform: translateY(-3px);
-    filter: brightness(1.1);
-}
-
-.button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .mobileToggleLink {
-    font-size: 14px;
+    font-size: 13px;
     color: #888;
+    cursor: pointer;
 }
 
-/* --- ANIMAÇÕES --- */
-@keyframes shine {
-    0% { left: -150%; }
-    100% { left: 200%; }
+.linkHighlight {
+    color: var(--cor-secundaria);
+    font-weight: 700;
 }
 
-/* --- MOBILE --- */
-@media (max-width: 768px) {
-    .form {
-        padding: 150px 25px 30px 25px !important; 
-        background: transparent !important;
-        justify-content: flex-start;
-    }
+/* Customizando a scrollbar para ficar bonita se aparecer */
+.form::-webkit-scrollbar {
+    width: 5px;
+}
+.form::-webkit-scrollbar-thumb {
+    background: var(--cor-primaria);
+    border-radius: 10px;
 }

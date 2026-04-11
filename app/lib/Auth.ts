@@ -11,43 +11,41 @@ export async function registrarUsuario({ email, password, name, file }: any): Pr
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { name } }, // Salva o nome nos metadados como backup
+    options: { data: { name } }, 
   });
 
   if (authError || !authData.user) {
+    // Aqui capturamos o erro "User already registered" que você viu no console
     throw authError || new Error("Não foi possível criar suas credenciais.");
   }
 
   const user = authData.user;
   let avatarUrl = "/Avatar_default.png";
 
-  // 2. Upload do Avatar (Delega para o especialista: storageDao)
+  // 2. Upload do Avatar (via StorageDao)
   if (file) {
     try {
       avatarUrl = await storageDao.uploadAvatar(file, user.id);
     } catch (err) {
-      // Se o upload falhar, apenas avisamos e seguimos com o padrão
-      // para não impedir o usuário de criar a conta.
       console.warn("⚠️ Falha no upload do avatar, usando imagem padrão.");
+      // Não damos throw aqui para não travar o cadastro por causa de uma foto
     }
   }
 
-  // 3. Criação do Perfil no Banco (Delega para o especialista: userDao)
+  // 3. Sincronização do Perfil (via UserDao)
+  // O upsert resolve: se a trigger criou, ele atualiza. Se não criou, ele insere.
   try {
     await userDao.upsertProfile(user.id, name, avatarUrl);
   } catch (error) {
-    // Se o perfil falhar aqui, o usuário existe no Auth mas não no banco (Profiles).
-    // Em sistemas críticos, aqui você faria um "rollback" ou logaria o erro.
-    throw new Error("Sua conta foi criada, mas houve um erro ao configurar seu perfil.");
+    throw new Error("Credenciais criadas, mas houve um erro ao configurar seu perfil.");
   }
 
-  // 4. Retorno do DTO (Transformação final para o App)
-  return userDao.mapToDto(user, { 
-    id: user.id, 
-    name, 
-    avatar_url: avatarUrl, 
-    created_at: new Date().toISOString() 
-  });
+  // 4. Busca os dados finais e transforma em DTO
+  // É melhor buscar do banco após o upsert para garantir que temos o ProfileRow completo
+  const finalProfile = await userDao.fetchProfile(user.id);
+  // ... dentro do registrarUsuario
+  
+  return userDao.mapToDto(user, finalProfile);
 }
 
 /**

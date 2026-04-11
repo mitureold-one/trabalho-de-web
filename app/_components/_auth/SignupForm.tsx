@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import styles from "@/app/styles/auth/signup.module.css"
 import { registrarUsuario } from "@/app/lib/Auth" 
+import Mensager from "./Mensager";
 
 interface SignUpProps {
   toggleMobile: () => void;
@@ -17,6 +18,7 @@ export default function SignupForm({ toggleMobile, onSuccess }: SignUpProps) {
   const [name, setNome] = useState("")
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // 1. CLEANUP DE MEMÓRIA (Otimizado)
   useEffect(() => {
@@ -93,11 +95,8 @@ export default function SignupForm({ toggleMobile, onSuccess }: SignUpProps) {
         <h1>Crie sua conta</h1>
       </header>
 
-      {errorMsg && (
-        <div className={styles.feedbackArea}>
-          <div className={styles.errorMessage}>✖ {errorMsg}</div>
-        </div>
-      )}
+      {errorMsg && <Mensager message={errorMsg} />}
+      {successMsg && <Mensager message={successMsg} type="success" />}
 
       <section className={styles.avatarSection}>
         <div className={styles.avatarContainer}>
