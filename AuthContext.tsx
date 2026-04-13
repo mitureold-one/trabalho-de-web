@@ -68,83 +68,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * alguns milissegundos para ser criado após o Auth.
    */
   const refreshUser = useCallback(
-    async (session: Session | null, forceRefresh = false) => {
-      if (!session) {
-        setUser(null)
-        invalidateCache()
-        setLoading(false)
-        return
+  async (session: Session | null, forceRefresh = false): Promise<UserDto | null> => { // Adicione o tipo de retorno aqui
+    if (!session) {
+      setUser(null);
+      invalidateCache();
+      setLoading(false);
+      return null; // ✅ Retorno 1
+    }
+
+    try {
+      if (!forceRefresh) {
+        const cachedUser = getCachedUser();
+        if (cachedUser) {
+          setUser(cachedUser);
+          setLoading(false);
+          if (pendingSignInRef.current) {
+            pendingSignInRef.current.resolve(cachedUser);
+            pendingSignInRef.current = null;
+          }
+          return cachedUser; // ✅ Retorno 2
+        }
       }
 
-      try {
-        if (!forceRefresh) {
-          const cachedUser = getCachedUser()
-          if (cachedUser) {
-            setUser(cachedUser)
-            setLoading(false)
-            if (pendingSignInRef.current) {
-              pendingSignInRef.current.resolve(cachedUser)
-              pendingSignInRef.current = null
-            }
-            return
-          }
+      console.log("[AuthContext] Buscando dados do usuário no banco...");
+
+      let profile = null;
+      let retries = 3;
+
+      while (retries > 0 && !profile) {
+        profile = await profileDao.fetchProfile(session.user.id);
+        if (!profile && retries > 1) {
+          console.warn(`[AuthContext] Perfil não encontrado, tentando novamente...`);
+          await new Promise((res) => setTimeout(res, 1000));
         }
+        retries--;
+      }
 
-        console.log("[AuthContext] Buscando dados do usuário no banco...")
+      if (!profile) {
+        throw new Error("Perfil de usuário não encontrado após várias tentativas.");
+      }
 
-        let profile = null
-        let retries = 3
-        
-        // Loop de tentativa para aguardar a Trigger do banco de dados
-        while (retries > 0 && !profile) {
-          profile = await profileDao.fetchProfile(session.user.id)
-          if (!profile && retries > 1) {
-            console.warn(`[AuthContext] Perfil não encontrado, tentando novamente em 1s... (${retries - 1} restando)`)
-            await new Promise(res => setTimeout(res, 1000))
-          }
-          retries--
-        }
+      const userData = userDao.mapToDto(session.user, profile);
 
-        if (!profile) {
-          throw new Error("Perfil de usuário não encontrado após várias tentativas.")
-        }
+      userCacheRef.current = {
+        userData,
+        timestamp: Date.now(),
+      };
 
-        const userData = userDao.mapToDto(session.user, profile)
+      setUser(userData);
 
-        // ✅ LUGAR IDEAL PARA O DEBUG:
-        console.log("=== DEBUG REFRESH USER ===");
-        console.log("1. Perfil Bruto do Banco (profile):", profile);
-        console.log("2. DTO Mapeado (userData):", userData);
-        console.log("3. Onboarding Complete no DTO:", userData.hasCompletedOnboarding);
-        console.log("==========================");
+      if (userData && pendingSignInRef.current) {
+        pendingSignInRef.current.resolve(userData);
+        pendingSignInRef.current = null;
+      }
 
-        userCacheRef.current = {
-          userData,
-          timestamp: Date.now(),
-        }
+      return userData; // ✅ Retorno 3 (Sucesso)
 
-        setUser(userData)
-
-        if (userData && pendingSignInRef.current) {
-          pendingSignInRef.current.resolve(userData)
-          pendingSignInRef.current = null
-        }
-      } catch (err) {
-        console.error("[AuthContext] Erro crítico: sessão ativa mas perfil sumiu.", err)
-        
-        // Se não achou o perfil após os retries, a sessão é inválida para o nosso app
-        setUser(null)
-        invalidateCache()
-        
-        
-        await supabase.auth.signOut() 
-        
-      } finally {
-        setLoading(false)
-}
-    },
-    [getCachedUser, invalidateCache]
-  )
+    } catch (err) {
+      console.error("[AuthContext] Erro crítico:", err);
+      setUser(null);
+      invalidateCache();
+      await supabase.auth.signOut();
+      return null; // ✅ Retorno 4 (Erro)
+    } finally {
+      setLoading(false);
+    }
+  },
+  [getCachedUser, invalidateCache]
+);
 
   useEffect(() => {
     let authSubscription: Subscription | null = null
