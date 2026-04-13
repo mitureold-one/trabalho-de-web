@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import styles from "@/app/styles/ui/header.module.css"
+import styles from "@/app/_styles/ui/header.module.css"
 
 import AvatarHeader from "./HeaderAvatar" 
 import Logo from "@/app/_components/_ui/_header/LogoHeader"

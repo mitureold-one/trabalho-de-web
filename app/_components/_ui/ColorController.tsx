@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "@/app/styles/ColorController.module.css";
+import styles from "@/app/_styles/ColorController.module.css";
 
 const DEFAULT_COLORS = {
   "--cor-primaria": "#061644",

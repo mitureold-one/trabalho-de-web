@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import Image from "next/image"
-import styles from "@/app/styles/footer.module.css"
+import styles from "@/app/_styles/footer.module.css"
 
 export default function Footer() {
   const pathname = usePathname()

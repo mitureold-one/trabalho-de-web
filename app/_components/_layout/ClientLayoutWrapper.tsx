@@ -6,7 +6,7 @@ import Header from "@/app/_components/_ui/_header/Header";
 import Footer from "@/app/_components/_ui/_footer/Footer";
 import { AuthProvider } from "@/AuthContext"; 
 import ColorController from "@/app/_components/_ui/ColorController"; 
-import styles from "@/app/styles/layout.module.css"; 
+import styles from "@/app/_styles/layout.module.css"; 
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);

@@ -1,89 +1,75 @@
 "use client"
 
-import { useState } from "react"
-import { useAuth } from "@/AuthContext" 
-import styles from "@/app/styles/auth/login.module.css"
-import Mensager from "./Mensager";
+import { useState, useCallback } from "react"
+import styles from "@/app/_styles/auth/login.module.css"
+import { UserDto } from "@/app/_interfaces/dto/user-dto"
+import Mensager from "./Mensager"
+import { useLogin } from "@/app/_hooks/useLogin"
 
 interface SignInProps {
-  onOpenReset: () => void;  
-  onSuccess: () => void; 
-  toggleMobile: () => void; 
+  onOpenReset: () => void
+  onSuccess: (user: UserDto) => void
+  toggleMobile: () => void
 }
 
 export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: SignInProps) {
-  const { signIn } = useAuth() 
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  async function handleLogin(e: React.FormEvent) {
-  e.preventDefault();
-  if (loading) return;
+  const { login, loading, error } = useLogin()
 
-  setLoading(true);
-  setErrorMsg(null);
-  setSuccessMsg(null);
+  const handleLogin = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (loading) return
 
-  try {
-    await signIn(email.trim().toLowerCase(), senha); 
-    setSuccessMsg("Bem-vindo de volta!");
-    onSuccess(); 
-
-  } catch (error: any) {
-    setLoading(false);
-
-    const errorMessage = error.error_description || error.message || "";
-    const isAuthError = errorMessage.includes("Invalid login credentials") || error.status === 400;
-
-    setErrorMsg(isAuthError ? "E-mail ou senha incorretos." : "Erro ao entrar. Tente novamente.");
-  }
-}
+      const result = await login(email, senha)
+      if (result) {
+        onSuccess(result)
+      }
+    },
+    [email, senha, login, loading, onSuccess]
+  )
 
   return (
     <form onSubmit={handleLogin} className={styles.form}>
       <header className={styles.header}>
         <h1>Login</h1>
       </header>
+
       <fieldset className={styles.inputFields} disabled={loading}>
         <input
           type="email"
           placeholder="Email"
-          value={email} 
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         <input
           type="password"
           placeholder="Senha"
-          value={senha} 
+          value={senha}
           onChange={(e) => setSenha(e.target.value)}
           required
         />
 
         <div className={styles.forgotPassword}>
           Esqueceu a senha?{" "}
-          <button 
+          <button
             type="button"
-            className={styles.linkButton} 
+            className={styles.linkButton}
             onClick={onOpenReset}
             disabled={loading}
           >
-            Recupere Aqui !
+            Recupere Aqui!
           </button>
         </div>
 
-
-        {errorMsg && <Mensager message={errorMsg} />}
-        {successMsg && <Mensager message={successMsg} type="success" />}
-
+        {error && <Mensager message={error} />}
       </fieldset>
 
       <footer className={styles.footer}>
-        <button 
+        <button
           type="submit"
           disabled={loading || !email || !senha}
           className={styles.button}
@@ -94,11 +80,7 @@ export default function LoginForm({ onOpenReset, onSuccess, toggleMobile }: Sign
         {!loading && (
           <p className={styles.mobileToggleLink}>
             Não tem uma conta?{" "}
-            <button 
-              type="button"
-              className={styles.linkButton} 
-              onClick={toggleMobile}
-            >
+            <button type="button" className={styles.linkButton} onClick={toggleMobile}>
               Cadastre-se
             </button>
           </p>

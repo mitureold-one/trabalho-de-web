@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { supabase } from "@/app/lib/Supa-base"
-import styles from "@/app/styles/modal/modal.resetpassword.module.css" 
+import { supabase } from "@/app/_lib/Supa-base"
+import styles from "@/app/_styles/modal/modal.resetpassword.module.css" 
 
 interface Props {
   isOpen: boolean

@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { messageDao } from "@/app/interfaces/dao/message-dao" 
-import { UserDto } from "@/app/interfaces/dto/user-dto"
-import styles from "@/app/styles/chat/messageinput.module.css"
+import { messageDao } from "@/app/_interfaces/dao/message-dao" 
+import { UserDto } from "@/app/_interfaces/dto/user-dto"
+import styles from "@/app/_styles/chat/messageinput.module.css"
 
 interface MessageInputProps {
   roomId: string

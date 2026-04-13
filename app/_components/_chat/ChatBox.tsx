@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo } from "react"
-import { useChatMessages } from "@/app/hooks/useChatMessages" 
+import { useChatMessages } from "@/app/_hooks/useChatMessages" 
 import MessageInput from "@/app/_components/_chat/MessageInput" 
 import MessageItem  from "@/app/_components/_chat/MessageItem" 
 import MembersSidebar from "./MembersSidebar"
-import styles from "@/app/styles/chat/chatbox.module.css"
-import { UserDto } from "@/app/interfaces/dto/user-dto"
-import { MessageDto } from "@/app/interfaces/dto/message-dto"
+import styles from "@/app/_styles/chat/chatbox.module.css"
+import { UserDto } from "@/app/_interfaces/dto/user-dto"
+import { MessageDto } from "@/app/_interfaces/dto/message-dto"
 
 interface ChatboxProps {
   roomId: string;

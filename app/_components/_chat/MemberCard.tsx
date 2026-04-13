@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import styles from "@/app/styles/chat/membercard.module.css"
-import { MemberDto } from "@/app/interfaces/dto/member-dto" 
+import styles from "@/app/_styles/chat/membercard.module.css"
+import { MemberDto } from "@/app/_interfaces/dto/member-dto" 
 
 interface MemberCardProps {
   member: MemberDto 

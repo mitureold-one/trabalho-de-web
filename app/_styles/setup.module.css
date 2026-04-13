@@ -1,0 +1,565 @@
+/* ==========================================================================
+   SETUP PAGE
+   ========================================================================== */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--cor-terciaria);
+  padding: 24px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bgGlow {
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(var(--cor-secundaria-rgb), 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   CARD
+   ========================================================================== */
+
+.card {
+  position: relative;
+  z-index: 1;
+  background: var(--cor-quaternaria);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(var(--cor-secundaria-rgb), 0.08);
+  overflow: hidden;
+  animation: cardIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.cardHeader {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.title {
+  color: var(--cor-quintenaria);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+}
+
+/* Progress bar */
+.progressBar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--cor-secundaria);
+  border-radius: 99px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(var(--cor-secundaria-rgb), 0.5);
+}
+
+/* Step dots */
+.steps {
+  display: flex;
+  gap: 10px;
+}
+
+.stepDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.stepActive {
+  background: rgba(var(--cor-secundaria-rgb), 0.2);
+  border-color: var(--cor-secundaria);
+  color: var(--cor-quintenaria);
+}
+
+/* ==========================================================================
+   BODY
+   ========================================================================== */
+
+.cardBody {
+  padding: 28px 32px;
+  min-height: 320px;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.errorMsg {
+  background: rgba(var(--cor-secundaria-rgb), 0.1);
+  border: 1px solid rgba(var(--cor-secundaria-rgb), 0.25);
+  color: #ff6b6b;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   STEP 0 — AVATAR & BANNER
+   ========================================================================== */
+
+.bannerSection {
+  width: 100%;
+  height: 130px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.bannerLabel {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.bannerEmpty {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--cor-primaria), rgba(var(--cor-secundaria-rgb), 0.3));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 2px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.bannerEmpty:hover {
+  border-color: rgba(var(--cor-secundaria-rgb), 0.4);
+}
+
+.bannerEmpty span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.bannerEmpty small {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+}
+
+.bannerPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: -8px;
+}
+
+.avatarLabel {
+  position: relative;
+  display: block;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.avatarPreview {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--cor-secundaria);
+  transition: filter 0.2s ease;
+}
+
+.avatarLabel:hover .avatarPreview {
+  filter: brightness(0.65);
+}
+
+.avatarOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.avatarLabel:hover .avatarOverlay {
+  opacity: 1;
+}
+
+.avatarHint {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+}
+
+.stepNote {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.78rem;
+  text-align: center;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   STEP 1 & 2 — CAMPOS
+   ========================================================================== */
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.required {
+  color: var(--cor-secundaria);
+}
+
+.optional {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.usernameWrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.usernameWrapper:focus-within {
+  border-color: rgba(var(--cor-secundaria-rgb), 0.5);
+}
+
+.usernameAt {
+  padding: 0 12px;
+  color: var(--cor-secundaria);
+  font-weight: 700;
+  font-size: 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input {
+  width: 100%;
+  padding: 13px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: var(--cor-quintenaria);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.usernameWrapper .input {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 13px 16px;
+}
+
+.input:focus {
+  border-color: rgba(var(--cor-secundaria-rgb), 0.5);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.textarea {
+  width: 100%;
+  padding: 13px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: var(--cor-quintenaria);
+  font-size: 0.95rem;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  line-height: 1.6;
+}
+
+.textarea:focus {
+  border-color: rgba(var(--cor-secundaria-rgb), 0.5);
+}
+
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.fieldHint {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+}
+
+/* Status grid */
+.statusGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.statusCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.statusCard:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.statusActive {
+  background: rgba(var(--cor-secundaria-rgb), 0.12) !important;
+  border-color: rgba(var(--cor-secundaria-rgb), 0.4) !important;
+}
+
+.statusEmoji {
+  font-size: 1.1rem;
+}
+
+.statusLabel {
+  color: var(--cor-quintenaria);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.statusDesc {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.cardFooter {
+  padding: 20px 32px 28px;
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btnPrimary {
+  flex: 1;
+  padding: 14px;
+  background: var(--cor-secundaria);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 20px rgba(var(--cor-secundaria-rgb), 0.35);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btnSecondary {
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--cor-quintenaria);
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .card {
+    border-radius: 20px;
+  }
+
+  .cardHeader,
+  .cardBody,
+  .cardFooter {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .statusGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ==========================================================================
+   SETUP PAGE (TRANSFORMADA EM OVERLAY)
+   ========================================================================== */
+
+.page {
+  /* Fixa o setup em cima de tudo */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Fundo preto com opacidade e o efeito de borrão (Glassmorphism) */
+  background-color: rgba(0, 0, 0, 0.75); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px); /* Suporte para Safari */
+  
+  padding: 24px 16px;
+  z-index: 9999; /* Garante que fique acima do HTML das rooms */
+  overflow-y: auto; /* Permite scroll se o card for maior que a tela no mobile */
+}
+
+/* Removemos o bgGlow ou ajustamos para ser apenas um detalhe sutil atrás do card */
+.bgGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  max-height: 800px;
+  background: radial-gradient(circle, rgba(var(--cor-secundaria-rgb), 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ajuste sutil no Card para destacar no fundo escuro */
+.card {
+  position: relative;
+  z-index: 1;
+  background: #121212; /* Um preto levemente mais claro que o fundo borrado */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  animation: cardIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.page {
+  /* Força o componente a ser uma "camada" por cima de tudo no navegador */
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* Cor sólida para não vazar nada */
+  background-color: #000000; 
+  
+  /* Se quiser o efeito borrado, use estes dois abaixo: */
+  /* background-color: rgba(0, 0, 0, 0.85); */
+  /* backdrop-filter: blur(20px); */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999; /* Um número absurdamente alto */
+}

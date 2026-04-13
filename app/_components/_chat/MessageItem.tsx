@@ -1,7 +1,7 @@
 "use client";
 
-import s from "@/app/styles/chat/messageitem.module.css";
-import { MessageDto } from "@/app/interfaces/dto/message-dto"; 
+import s from "@/app/_styles/chat/messageitem.module.css";
+import { MessageDto } from "@/app/_interfaces/dto/message-dto"; 
 
 interface MessageItemProps {
   msg: MessageDto; 

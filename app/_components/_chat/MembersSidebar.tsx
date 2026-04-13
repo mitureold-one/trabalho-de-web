@@ -1,9 +1,9 @@
 "use client"
 
 import { useAuth } from "@/AuthContext"
-import { useRoomMembers } from "@/app/hooks/useRoomMembers"
+import { useRoomMembers } from "@/app/_hooks/useRoomMembers"
 import MemberCard from "@/app/_components/_chat/MemberCard"
-import styles from "@/app/styles/chat/members.module.css"
+import styles from "@/app/_styles/chat/members.module.css"
 
 interface MembersSidebarProps {
   roomId: string;

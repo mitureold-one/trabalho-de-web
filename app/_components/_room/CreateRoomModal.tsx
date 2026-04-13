@@ -1,9 +1,9 @@
 "use client";
 
-import styles from "@/app/styles/modal/modal.createroom.module.css";
+import styles from "@/app/_styles/modal/modal.createroom.module.css";
 import { useState } from "react";
-import { roomDao } from "@/app/interfaces/dao/room-dao"; // ✅ Importando o DAO
-import { RoomDto } from "@/app/interfaces/dto/room-dto"; // ✅ Importando o Tipo
+import { roomDao } from "@/app/_interfaces/dao/room-dao"; // ✅ Importando o DAO
+import { RoomDto } from "@/app/_interfaces/dto/room-dto"; // ✅ Importando o Tipo
 
 interface Props {
   isOpen: boolean;

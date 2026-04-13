@@ -1,0 +1,160 @@
+/* --- LAYOUT BASE & CONTAINERS --- */
+.feedWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem; /* Espaço generoso entre seções */
+  padding: 20px 0;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.01em;
+}
+
+/* --- GRIDS --- */
+.roomGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.popularGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* --- SEÇÃO "ON FIRE" (ESTILO PREMIUM) --- */
+.popularSection {
+  background: radial-gradient(circle at top left, rgba(255, 69, 0, 0.08), transparent 50%);
+  padding: 2rem;
+  border-radius: 2.5rem;
+  border: 1px solid rgba(255, 69, 0, 0.1);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.fireIcon {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  font-size: 1.5rem;
+  animation: flicker 1.5s infinite alternate;
+}
+
+/* Brilho atrás do ícone de fogo */
+.fireIcon::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.4), transparent 70%);
+  filter: blur(5px);
+  z-index: -1;
+  animation: firePulse 2s ease-out infinite;
+}
+
+/* --- ANIMAÇÕES DE DESTAQUE --- */
+.featuredAnimation {
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: float 5s ease-in-out infinite;
+}
+
+.featuredAnimation:hover {
+  transform: scale(1.03) translateY(-5px);
+  z-index: 10;
+}
+
+/* Brilho RGB suave atrás dos cards populares */
+.featuredAnimation::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+  background: linear-gradient(45deg, #818cf8, #c084fc, #818cf8);
+  z-index: -1;
+  filter: blur(12px);
+  opacity: 0.25;
+  animation: rotateGradient 4s linear infinite;
+}
+
+/* --- EMPTY STATE (ESTILO DASHED) --- */
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 3rem;
+  margin: 2rem 0;
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  display: block;
+  animation: pulseIcon 2.5s infinite ease-in-out;
+}
+
+.emptyContainer p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  max-width: 320px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 768px) {
+  .feedWrapper { gap: 2.5rem; padding: 10px; }
+  .sectionTitle { font-size: 1.15rem; }
+  
+  .roomGrid, .popularGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Desativa animações pesadas no mobile para performance */
+  .featuredAnimation {
+    animation: none;
+  }
+  
+  .popularSection { padding: 1.25rem; }
+}
+
+/* --- KEYFRAMES --- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rotateGradient {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes firePulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes pulseIcon {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-10px) scale(1.05); opacity: 1; }
+}
+
+@keyframes flicker {
+  0% { filter: drop-shadow(0 0 2px #ff4500); }
+  100% { filter: drop-shadow(0 0 10px #ff8c00); }
+}

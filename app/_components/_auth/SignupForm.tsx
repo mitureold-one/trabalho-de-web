@@ -1,147 +1,109 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import styles from "@/app/styles/auth/signup.module.css"
-import { registrarUsuario } from "@/app/lib/Auth" 
-import Mensager from "./Mensager";
+import { useState, useCallback } from "react"
+import styles from "@/app/_styles/auth/signup.module.css"
+import { UserDto } from "@/app/_interfaces/dto/user-dto"
+import Mensager from "./Mensager"
+import { useSignup } from "@/app/_hooks/useSignup"
 
 interface SignUpProps {
-  toggleMobile: () => void;
-  onSuccess: (data: { name: string; avatar_url: string }) => void; 
+  toggleMobile: () => void
+  onSuccess: (user: UserDto) => void
 }
 
-export default function SignupForm({ toggleMobile, onSuccess }: SignUpProps) {
-  const [file, setFile] = useState<File | null>(null) 
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+export default function SignupForm({ toggleMobile }: SignUpProps) {
+  // Estados da UI
   const [email, setEmail] = useState("")
-  const [password, setSenha] = useState("")
-  const [name, setNome] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [isShaking, setIsShaking] = useState(false)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
 
-  // 1. CLEANUP DE MEMÓRIA (Otimizado)
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  }, [previewUrl])
+  // Lógica técnica do hook
+  const { signup, validateFormData, loading, error, setError } = useSignup()
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
-    if (selectedFile) {
-      // Validação Sênior: Tamanho de arquivo (2MB max)
-      if (selectedFile.size > 2 * 1024 * 1024) {
-        setErrorMsg("A imagem deve ter no máximo 2MB.")
+  const triggerShake = () => {
+    setIsShaking(true)
+    setTimeout(() => setIsShaking(false), 500)
+  }
+
+  // No handleSignup dentro do SignupForm.tsx
+
+  const handleSignup = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (loading) return
+
+      // 1. Limpa estados de feedback antes de começar
+      setError(null); 
+      setSuccessMsg(null);
+
+      const validationError = validateFormData(email, password, confirmPassword)
+      if (validationError) {
+        setError(validationError)
+        triggerShake()
         return
       }
 
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-      setFile(selectedFile)
-      setPreviewUrl(URL.createObjectURL(selectedFile))
-      setErrorMsg(null)
-    }
-  }
+      const result = await signup(email, password)
 
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    if (loading) return // Guard clause contra double-tap
+      if (result) {
+        // ✅ Definimos a mensagem baseada no status real do usuário
+        if (result.pendingConfirmation) {
+          setSuccessMsg("Conta criada! (Aguardando confirmação de e-mail)")
+        } else {
+          setSuccessMsg("Conta criada com sucesso! Você já pode entrar.")
+        }
 
-    setLoading(true)
-    setErrorMsg(null)
-
-    // Higienização de dados
-    const cleanName = name.trim()
-    const cleanEmail = email.trim().toLowerCase()
-
-    try {
-      // Chamada da API/Lib
-      const novoUsuario = await registrarUsuario({ 
-        email: cleanEmail, 
-        password, 
-        name: cleanName, 
-        file 
-      })  
-      
-      // 2. FLUXO DETERMINÍSTICO
-      // O sucesso aqui é imediato. O "delay" de leitura agora 
-      // é responsabilidade da Page (Home) via WelcomeModal.
-      onSuccess({
-        name: novoUsuario.name,
-        avatar_url: novoUsuario.avatarUrl
-      })
-
-    } catch (err: unknown) {
-      console.error("Erro no cadastro:", err)
-      
-      // 3. TIPAGEM DE ERRO ROBUSTA
-      if (err instanceof Error) {
-        const msg = err.message === "User already registered" 
-          ? "Este e-mail já está em uso." 
-          : "Erro ao cadastrar. Verifique os dados."
-        setErrorMsg(msg)
+        // ✅ Limpamos os campos mas NÃO chamamos onSuccess(result) 
+        // para evitar o redirecionamento automático que você não quer.
+        setEmail("")
+        setPassword("")
+        setConfirmPassword("")
+        
       } else {
-        setErrorMsg("Ocorreu um erro inesperado.")
+        triggerShake()
       }
-    } finally {
-      // 4. GARANTIA DE ESTADO CONSISTENTE
-      setLoading(false) 
-    }
-  }
+    },
+    [email, password, confirmPassword, signup, validateFormData, loading, setError]
+  )
 
   return (
     <form className={styles.form} onSubmit={handleSignup}>
       <header className={styles.header}>
         <h1>Crie sua conta</h1>
+        <p>Preencha os campos abaixo para criar sua conta</p>
+        <p>e comece a falar com a galera</p>
       </header>
 
-      {errorMsg && <Mensager message={errorMsg} />}
-      {successMsg && <Mensager message={successMsg} type="success" />}
-
-      <section className={styles.avatarSection}>
-        <div className={styles.avatarContainer}>
-          <label htmlFor="avatar-input" className={styles.avatarLabel}>
-            <img 
-              src={previewUrl || "/Avatar_default.png"} 
-              alt="Preview" 
-              className={styles.avatarImage}
-            />
-            <div className={styles.cameraIcon}>
-              <img src="/cenario.png" alt="Trocar foto" />
-            </div>
-          </label>
-          <input 
-            id="avatar-input" 
-            type="file" 
-            accept="image/png, image/jpeg, image/webp" 
-            onChange={handleFileChange} 
-            className="hidden"
-            style={{ display: 'none' }}
-          />
-        </div>
-      </section>
+      <div className={`${styles.feedbackArea} ${isShaking ? styles.shake : ""}`}>
+        {error && <Mensager message={error} />}
+        {successMsg && <Mensager message={successMsg} type="success" />}
+      </div>
 
       <fieldset className={styles.inputFields} disabled={loading}>
-        <input 
-          type="text" 
-          placeholder="Nome" 
-          value={name} 
-          onChange={(e) => setNome(e.target.value)} 
-          required 
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
+        <input
+          type="password"
+          placeholder="Senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          minLength={6}
         />
-        <input 
-          type="password" 
-          placeholder="Senha" 
-          value={password} 
-          onChange={(e) => setSenha(e.target.value)} 
-          required 
+        <input
+          type="password"
+          placeholder="Confirmar Senha"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
           minLength={6}
         />
       </fieldset>

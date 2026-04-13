@@ -1,0 +1,189 @@
+.form {
+    background-color: var(--cor-quintenaria);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centraliza o bloco todo no card */
+    height: 100%; 
+    width: 100%;
+    padding: 20px 45px; /* Padding vertical mínimo */
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden; /* Proíbe terminantemente a rolagem */
+}
+
+/* --- HEADER SUPER COMPACTO --- */
+.header h1 {
+    font-size: 1.6rem; /* Reduzido para ganhar espaço */
+    color: var(--cor-terciaria);
+    margin: 0; 
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.header p {
+    font-size: 12px;
+    color: #666;
+    margin: 2px 0 15px 0; /* Margens mínimas */
+    line-height: 1.2;
+}
+
+/* --- CAMPO DE INPUTS --- */
+.inputFields {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* Espaço bem curto entre os 4 inputs */
+}
+
+.inputFields input {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 15px; /* Inputs mais baixos */
+    font-size: 14px;
+    border-radius: 10px;
+    outline: none;
+    width: 100%;
+    max-width: 300px;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.inputFields input:focus {
+    border-color: var(--cor-primaria);
+    transform: translateY(-1px);
+}
+
+/* --- FOOTER --- */
+.footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.button {
+    background-color: var(--cor-secundaria);
+    color: var(--cor-quintenaria);
+    font-size: 12px;
+    padding: 12px; /* Botão mais magro */
+    width: 100%;
+    max-width: 300px; 
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeito Shine (Mantido do login) */
+.button::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -150%;
+    width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-30deg);
+}
+
+.button:hover:not(:disabled)::before { animation: shine 0.7s forwards; }
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+.feedbackArea {
+  width: 100%;
+  max-width: 320px;
+  /* Aqui está o seu "pequeno gap" */
+  margin-bottom: 15px; 
+  
+  /* Garante que se não houver mensagem, o espaço não fique vazio */
+  min-height: 0; 
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Caso apareça mais de uma mensagem */
+}
+
+/* --- RESPONSIVIDADE (MOBILE) --- */
+@media (max-width: 768px) {
+    .form {
+        /* Aumentamos o padding-top para 220px para garantir que 
+           os inputs comecem bem abaixo do gradiente vermelho/azul */
+        padding: 220px 25px 30px 25px !important; 
+        background: transparent !important;
+        justify-content: flex-start;
+        height: 100%; /* Garante que ocupe o container todo */
+    }
+
+    .header {
+        position: absolute;
+        /* Centraliza o header na parte do gradiente */
+        top: 50px;
+        left: 0;
+        right: 0;
+        padding: 0 20px;
+        z-index: 10;
+    }
+
+    .header h1 {
+        color: var(--cor-quintenaria) !important; 
+        text-shadow: 0 3px 15px rgba(0,0,0,0.4);
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+
+    .header p {
+        color: var(--cor-quintenaria);
+        opacity: 0.9;
+        font-size: 12px;
+        /* Removemos o segundo parágrafo no mobile se ficar muito apertado, 
+           ou apenas reduzimos o line-height */
+        line-height: 1.2;
+    }
+
+    /* Opcional: Se o texto "e comece a falar..." estiver encavalando, 
+       podemos escondê-lo só no mobile para limpar o visual */
+    .header p:last-of-type {
+        display: none;
+    }
+
+    .inputFields {
+        gap: 12px; /* Espaço um pouco maior entre os inputs já que agora temos área azul */
+    }
+
+    .mobileToggleLink {
+        display: block !important;
+        margin-top: 25px;
+        /* Cor do texto "Já tem uma conta?" */
+        color: rgba(255, 255, 255, 0.6) !important; 
+        font-size: 13px;
+    }
+
+    /* Aqui é onde a mágica acontece para ficar igual ao Login */
+    .mobileToggleLink .linkHighlight {
+        color: var(--cor-secundaria) !important; /* Ou a cor vermelha que você usa */
+        font-weight: 700;
+        margin-left: 5px;
+        text-decoration: none;
+    }
+}
+
+@keyframes shine {
+    0% { left: -150%; }
+    100% { left: 200%; }
+}
+
+/* A animação em si (ajustada para ser mais perceptível) */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}

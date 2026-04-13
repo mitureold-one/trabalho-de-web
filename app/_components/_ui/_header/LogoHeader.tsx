@@ -1,4 +1,4 @@
-import styles from "@/app/styles/ui/Logo.header.module.css";
+import styles from "@/app/_styles/ui/Logo.header.module.css";
 
 interface LogoProps {
   isCollapsed?: boolean;

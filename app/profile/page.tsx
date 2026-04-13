@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useAuth } from "@/AuthContext"
-import { storageDao } from "@/app/interfaces/dao/storage-dao" 
-import { userDao } from "@/app/interfaces/dao/user-dao"       
-import styles from "@/app/styles/profile.module.css"
+import { storageDao } from "@/app/_interfaces/dao/storage-dao" 
+import { profileDao } from "@/app/_interfaces/dao/profile-dao"
+import styles from "@/app/_styles/profile.module.css"
 import { Camera } from "lucide-react"
 
 export default function Perfil() {
@@ -63,8 +63,8 @@ export default function Perfil() {
         finalAvatarUrl = await storageDao.uploadAvatar(file, user.id)
       }
 
-      // 2. Update via DAO (Não precisamos mais saber o nome da tabela ou colunas snake_case)
-      await userDao.upsertProfile(user.id, nome.trim(), finalAvatarUrl)
+      // 2. Update via profileDao (centralizado para todas operações de perfil)
+      await profileDao.upsertProfile(user.id, { name: nome.trim(), avatar_url: finalAvatarUrl })
 
       setAvatarUrl(finalAvatarUrl)
       setFile(null)

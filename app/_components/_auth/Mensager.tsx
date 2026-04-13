@@ -1,5 +1,5 @@
 "use client"
-import styles from "@/app/styles/mensager.module.css"
+import styles from "@/app/_styles/mensager.module.css"
 
 interface MensagerProps {
   message: string;

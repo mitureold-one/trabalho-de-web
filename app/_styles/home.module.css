@@ -1,0 +1,195 @@
+/* --- CONTAINER E LAYOUT --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #fff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.titleArea { flex: 1; min-width: 300px; }
+
+.greetingText {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.statsText {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- AÇÕES (BUSCA + BOTÃO) --- */
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) { .actions { width: auto; } }
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) { .searchWrapper { min-width: 320px; } }
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: 0.3s;
+}
+
+.searchWrapper:focus-within .searchIcon {
+  opacity: 1;
+  filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.8));
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #fff;
+  outline: none;
+  transition: 0.3s;
+  backdrop-filter: blur(10px);
+}
+
+.searchInput:focus {
+  border-color: #818cf8;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.15);
+}
+
+.createButton {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* --- CONTEÚDO E ESTADOS DE FEEDBACK --- */
+.divider {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 2.5rem;
+}
+
+.content {
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Loader Centralizado */
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1; /* Ocupa o espaço disponível para centralizar verticalmente */
+  gap: 1.5rem;
+  color: #818cf8;
+  font-weight: 600;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(129, 140, 248, 0.1);
+  border-top: 3px solid #818cf8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Empty e Error States */
+.emptyState, .errorState {
+  margin: auto; /* Centralização mágica dentro do flex column */
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 480px;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.errorState {
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.03);
+}
+
+.emptyState p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.emptyState button {
+  background: rgba(129, 140, 248, 0.1);
+  color: #818cf8;
+  border: 1px solid rgba(129, 140, 248, 0.2);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.emptyState button:hover {
+  background: #818cf8;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* --- KEYFRAMES --- */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

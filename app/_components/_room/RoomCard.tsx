@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import styles from "@/app/styles/rooms/roomcard.module.css"
+import styles from "@/app/_styles/rooms/roomcard.module.css"
 import { useRouter } from "next/navigation"
-import { roomDao } from "@/app/interfaces/dao/room-dao" // ✅ Usando o novo DAO
-import { RoomDto } from "@/app/interfaces/dto/room-dto" // ✅ Usando o novo DTO
+import { roomDao } from "@/app/_interfaces/dao/room-dao" // ✅ Usando o novo DAO
+import { RoomDto } from "@/app/_interfaces/dto/room-dto" // ✅ Usando o novo DTO
 
 interface RoomCardProps {
   room: RoomDto; // ✅ Tipo atualizado
@@ -95,8 +95,6 @@ export default function RoomCard({ room }: RoomCardProps) {
                 alt={room.isPrivate ? "Privada" : "Pública"} 
               />
             </div>
-            {/* O campo 'slug' ou 'description' pode ser usado como badge se desejar */}
-            {room.slug && <span className={styles.topicBadge}>#{room.slug}</span>}
           </div>
         </div>
       </div>

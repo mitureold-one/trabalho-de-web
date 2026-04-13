@@ -1,6 +1,6 @@
 "use client"
 
-import styles from "@/app/styles/auth/toggle.module.css" 
+import styles from "@/app/_styles/auth/toggle.module.css" 
 
 // 1. TIPAGEM PROFISSIONAL (Adeus, any!)
 interface TogglePanelProps {

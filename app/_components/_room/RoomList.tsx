@@ -1,9 +1,9 @@
 "use client"
 
 import { useMemo } from "react";
-import styles from "@/app/styles/rooms/roomlist.module.css";
+import styles from "@/app/_styles/rooms/roomlist.module.css";
 import RoomCard from "@/app/_components/_room/RoomCard";
-import { RoomDto } from "@/app/interfaces/dto/room-dto"; // ✅ Usando o DTO padronizado
+import { RoomDto } from "@/app/_interfaces/dto/room-dto";
 
 interface RoomListProps {
   rooms: RoomDto[];       
